@@ -1,0 +1,352 @@
+@font-face{font-family:"Reader Noto";src:url("/static/fonts/NotoSansCJKsc-Regular.otf") format("opentype");font-weight:100 500;font-style:normal;font-display:block}
+@font-face{font-family:"Reader Noto";src:url("/static/fonts/NotoSansCJKsc-Bold.otf") format("opentype");font-weight:600 900;font-style:normal;font-display:block}
+
+:root{--ink:#293d36;--muted:#859088;--accent:#28654e;--line:#e4e8e1;--paper:#fff;--bg:#f5f6f1}*{box-sizing:border-box}body{margin:0;color:var(--ink);font:14px/1.6 "Reader Noto",sans-serif;background:var(--bg);height:100vh;display:flex}button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;background:transparent;color:inherit;border-radius:7px}button:hover{background:#e9eee7}button:disabled{opacity:.45;cursor:wait}input,textarea,select{color:var(--ink);border:1px solid var(--line);border-radius:7px;background:white;outline:none}input:focus,textarea:focus{border-color:#659b7d;box-shadow:0 0 0 2px #28654e14}button:focus-visible{outline:2px solid #659b7d;outline-offset:2px}[hidden]{display:none!important}.library{width:240px;flex-shrink:0;background:#edf0e9;border-right:1px solid var(--line);padding:32px 20px;display:flex;flex-direction:column}.brand{display:flex;gap:12px;text-decoration:none;color:var(--ink);font-family:"Reader Noto",sans-serif;font-size:46px;font-style:italic;line-height:1}.brand span{font-family:"Reader Noto",sans-serif;font-style:normal;font-size:25px;letter-spacing:-1px;padding-top:1px}.brand small{display:block;font:10px/2.6 "Reader Noto",sans-serif;letter-spacing:2px;color:#7b897e}.section-label{font-size:11px;color:#7b897e;margin-top:42px;margin-bottom:14px;display:flex;justify-content:space-between}.section-label span{font-size:8px;letter-spacing:1px;padding-top:2px}.nav{display:flex;gap:12px;align-items:center;padding:11px 13px;text-align:left}.nav.active{background:#dfe8dc;color:#2f634b}.nav b{margin-left:auto;font-size:11px}.import{border:1px dashed #b4c3b4;margin-top:15px;padding:10px;font-size:12px}.list-heading{margin-top:30px}#documents{overflow:auto;flex:1}.document-item{width:100%;padding:12px 10px;display:block;text-align:left;margin-bottom:6px}.document-item.active{background:#fff9;box-shadow:0 1px 4px #263d3510}.document-item strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:500}.document-item small{display:block;color:var(--muted);margin-top:5px;font-size:10px}.document-item .progress{height:2px;background:#dde5da;margin-top:9px}.progress i{display:block;height:100%;background:#74947c}.local-status{font-size:11px;color:#728271;border-top:1px solid #dbe2d7;padding-top:18px;margin-top:20px}.local-status small{display:block;font-size:10px;color:#95a08f;padding-left:12px}.local-status i,.context i{display:inline-block;width:5px;height:5px;background:#739c75;border-radius:50%;margin-right:7px}main{flex:1;min-width:0;display:flex;flex-direction:column}header{height:73px;flex-shrink:0;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px;background:#fbfcf8}.breadcrumb{font-size:11px;color:#879287;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.breadcrumb span{margin:0 12px;color:#b6bfb1}.breadcrumb strong{font-weight:500;color:#546250}.icon-button{font-size:12px;padding:8px;white-space:nowrap}.workspace{display:flex;flex:1;min-height:0}.reader{flex:1;min-width:0;display:flex;flex-direction:column;background:#f4f5ef}.welcome{max-width:760px;margin:auto;padding:40px 50px;width:100%;overflow:auto}.eyebrow{font-size:9px;letter-spacing:2.3px;color:#82947a;font-weight:600}h1{font-family:"Reader Noto",sans-serif;font-size:clamp(30px,3vw,46px);font-weight:500;line-height:1.5;letter-spacing:1px;margin:24px 0 16px}h1 span{color:#8ba07f}.welcome>p{font-size:13px;line-height:2.2;color:#889180;margin-bottom:27px}.primary{background:var(--accent);color:white;padding:10px 16px}.primary:hover{background:#1e513d}.welcome>small{display:block;font-size:10px;color:#99a191;margin-top:13px}.feature-grid{border-top:1px solid #dfe5d9;margin-top:56px;padding-top:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.feature-grid b{font:italic 20px "Reader Noto";color:#9ba890}.feature-grid h3{font-size:12px;font-weight:500;margin:10px 0 5px}.feature-grid p{font-size:10px;line-height:1.9;color:#8c9685}.assistant-panel{width:365px;flex-shrink:0;background:#fcfdf9;border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0}.panel-title{display:flex;gap:9px;align-items:center;padding:24px 24px 15px}.panel-title b{font-size:14px;font-weight:500}.spark{font-size:24px;color:#648468}#model-badge{font-size:9px;border:1px solid #e0e7d9;border-radius:4px;margin-left:auto;padding:1px 6px;color:#819072}.tabs{display:flex;border-bottom:1px solid var(--line);padding:0 23px;gap:28px}.tabs button{border-radius:0;padding:8px 4px 12px;color:#9aa393;font-size:12px}.tabs button.active{border-bottom:2px solid #34624a;color:#34624a}.context{margin:16px 20px 8px;padding:8px 12px;background:#f0f4ec;border-radius:5px;font-size:10px;color:#76876c}.tab-content{flex:1;min-height:0;padding:0 20px 14px;overflow:auto}#chat-tab{display:flex;flex-direction:column}.messages{flex:1;min-height:0;overflow:auto;padding:12px 0}.chat-intro{text-align:center;padding:40px 0}.chat-intro>span{font-size:37px;color:#8da383}.chat-intro h2{font-size:15px;font-weight:500;margin:15px 0 9px}.chat-intro p{font-size:11px;color:#939d8d;line-height:2}.suggestions{display:flex;gap:8px;margin:10px 0}.suggestions button{font-size:10px;border:1px solid var(--line);padding:5px 9px;border-radius:20px;color:#85927b}#chat-form{border:1px solid #dce3d5;border-radius:10px;background:#fff;padding:10px}textarea{width:100%;resize:vertical;padding:10px;font-size:12px}#question{border:0;padding:3px;resize:none;box-shadow:none}::placeholder{color:#a5ad9c}.compose-bottom{display:flex;align-items:center;font-size:10px;gap:7px}.compose-bottom label{display:flex;align-items:center;white-space:nowrap}.compose-bottom input{accent-color:var(--accent)}.compose-bottom select{border:0;font-size:10px;color:#839174;background:transparent}.compose-bottom button{margin-left:auto;font-size:21px;padding:0 11px}.privacy-caption{text-align:center;font-size:9px;color:#a1aa97;margin-top:10px}.toolbar{height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;border-bottom:1px solid var(--line);font-size:11px}.toolbar>div{display:flex;align-items:center;gap:9px}.toolbar button{padding:4px 9px}.toolbar input{width:47px;padding:3px;text-align:center}.divider{height:18px;width:1px;background:var(--line);margin:0 8px}.viewport{flex:1;overflow:auto;padding:28px;min-height:0}.reader-footer{font-size:9px;color:#8c9684;display:flex;justify-content:space-between;align-items:center;padding:10px 22px;border-top:1px solid var(--line)}.reader-footer button{font-size:10px;color:var(--accent)}#paper{position:relative;box-shadow:0 4px 24px #283a3210;margin:0 auto;background:#fff}#page-image{display:block;width:100%;pointer-events:none}#text-layer{position:absolute;inset:0;overflow:hidden}#text-layer span{position:absolute;color:transparent;white-space:pre;transform-origin:0 0;line-height:1;cursor:text}#text-layer ::selection{background:#75aa7b55;color:transparent}#paper.cropping{cursor:crosshair;touch-action:none}#paper.cropping #text-layer{pointer-events:none}#crop.active{background:#dce8d5}#crop-box,#highlight{position:absolute;pointer-events:none;display:none;border:1px solid #49835e;background:#73a56b33}#highlight{background:#f5cb5f55;border-color:#d8b75f}#selection{background:#eef3e9;border-left:2px solid #72966a;font-size:10px;padding:8px 10px;max-height:105px;overflow:auto}#selection>div{display:flex;justify-content:space-between;color:#688460}#selection p{margin:5px 0;white-space:pre-wrap}.message{padding:13px;margin:9px 0;font-size:12px;line-height:1.9;white-space:pre-wrap;overflow-wrap:anywhere;background:#f0f3ed;border-radius:8px}.message.user{background:#e3ece0;margin-left:25px}.message .role{display:block;font-size:9px;color:#829276;margin-bottom:6px}.sources{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px}.sources button{font-size:9px;background:#fff;border:1px solid #d9e4d3;padding:3px 6px}.search-form{display:flex;gap:8px;margin-top:15px}.search-form input{min-width:0;flex:1;padding:8px}.search-form button{padding:8px}.hint{font-size:11px;color:#88927f}.result,.note{background:white;border:1px solid var(--line);border-radius:8px;padding:13px;margin-top:12px;font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere}.result{display:block;width:100%;text-align:left}.result small,.note small{display:block;color:#7b9270;font-size:10px;margin-bottom:8px}.notes-head{display:flex;justify-content:space-between;font-size:11px;margin:16px 0}.notes-head button{font-size:10px;color:var(--accent)}#note-form>button{margin-top:8px;font-size:11px}.note blockquote{border-left:2px solid #c3d3b8;margin:10px 0;padding-left:10px;color:#87917e}.note p{margin-bottom:0}#toast{position:fixed;inset:auto auto 24px 50%;margin:0;transform:translateX(-50%);background:#2c4036;color:white;border:0;border-radius:8px;box-shadow:0 5px 30px #0006;padding:12px 20px;font-size:12px;z-index:2147483647;max-width:90vw;overflow-wrap:anywhere;pointer-events:none}dialog{max-width:570px;width:90%;border:1px solid var(--line);border-radius:15px;padding:32px;color:var(--ink);box-shadow:0 20px 80px #0003}dialog::backdrop{background:#263e3550}dialog h2{font-size:22px}dialog h3{font-size:14px;margin-top:24px}dialog p{font-size:12px;color:#7c8972;line-height:1.9}dialog pre{background:#f0f3ec;padding:14px;font-size:11px;white-space:pre-wrap;overflow-wrap:anywhere}.close{float:right;font-size:24px}#connection-status{padding:12px;background:#edf3e6;font-size:12px;border-radius:6px}@media(min-width:1600px){.assistant-panel{width:410px}.welcome{padding:60px}}@media(max-width:1150px){.library{width:190px;padding:24px 13px}.assistant-panel{width:315px}.welcome{padding:30px}.feature-grid{gap:10px}.reader-footer>span{display:none}.toolbar{padding:0 8px}.toolbar>div{gap:3px}}@media(max-width:850px){body{height:auto;min-height:100vh}.library{width:155px;position:sticky;top:0;height:100vh}.workspace{flex-direction:column}.reader{min-height:600px}.assistant-panel{width:100%;min-height:570px;border-top:1px solid var(--line)}.messages{max-height:450px;min-height:220px}.viewport{max-height:75vh}.brand{font-size:32px}.brand span{font-size:20px}.brand small{font-size:8px;letter-spacing:0}.section-label span{display:none}header{padding:0 15px}.feature-grid{margin-top:30px}}@media(max-width:520px){.library{width:70px;padding:20px 6px}.brand{justify-content:center}.brand span,.section-label,.nav span,.nav b,.local-status{display:none}.nav{justify-content:center}.import{font-size:10px;padding:7px 2px}.document-item{padding:8px 3px}.document-item strong{font-size:9px}.document-item small{font-size:8px}.welcome{padding:30px 23px}.feature-grid p{font-size:9px}.icon-button span{display:none}}
+
+/* Model configuration dialog */
+#settings-dialog{width:min(880px,94vw);max-width:880px;padding:0;max-height:92vh;overflow:auto;background:#fbfcf8} .settings-heading{padding:26px 30px 16px;display:flex;justify-content:space-between;align-items:flex-start}.settings-heading h2{margin:8px 0 4px}.settings-heading p{margin:0}.settings-heading .close{float:none;padding:0 8px}.model-flow{display:flex;justify-content:center;gap:22px;align-items:center;margin:0 30px 22px;padding:14px;background:#edf2e7;border-radius:9px;font-size:12px}.model-flow span small{display:block;font-size:10px;color:#88957d}.model-flow b{font-weight:400;color:#9cad8f}.settings-body{display:grid;grid-template-columns:185px 1fr;border-top:1px solid var(--line)}.settings-nav{padding:18px 12px;border-right:1px solid var(--line);background:#f2f5ed}.settings-nav button{display:block;text-align:left;width:100%;padding:13px 12px;margin-bottom:8px;font-size:13px}.settings-nav button small{display:block;font-size:10px;margin:5px 0 0;color:#8b9880}.settings-nav button.active{background:#e0ead8;color:#2b6549}.model-profile{padding:22px 28px}.profile-heading{display:flex;align-items:flex-start;gap:12px;justify-content:space-between}.profile-heading h3{margin:0 0 8px;font-size:17px}.profile-heading p{margin:0;max-width:365px;font-size:11px}.model-toggle{display:flex;align-items:center;gap:5px;white-space:nowrap;font-size:12px;padding-top:2px}.model-toggle input,.key-clear input{accent-color:var(--accent)}.profile-off{margin:14px 0 0;padding:9px 12px;background:#f1f3ed;border-radius:6px;color:#829178;font-size:11px}.model-field{display:block;margin-top:16px}.model-field>span{display:block;font-size:11px;font-weight:600;margin-bottom:6px}.model-field input,.model-field select{width:100%;padding:9px 10px;min-width:0;font-size:12px}.model-help{font-size:10px!important;color:#8d9884!important;margin:5px 0 0!important}.key-clear{display:flex;gap:5px;align-items:center;margin-top:6px;font-size:10px;color:#8b7968}.model-row{display:flex;gap:7px}.model-row input{flex:1}.secondary{border:1px solid #cddbc4;padding:8px 12px;white-space:nowrap;font-size:11px;background:#f8faf4}.fetched-models{display:block;width:100%;margin-top:8px;padding:8px;font-size:11px}.model-advanced{margin-top:18px;font-size:11px;color:#748268}.model-advanced summary{cursor:pointer}.model-advanced .model-field{margin-top:8px}.profile-actions{display:flex;align-items:center;gap:12px;margin-top:18px}.profile-feedback{font-size:11px;color:#397752;line-height:1.8;min-height:0;margin-top:10px;overflow-wrap:anywhere}.error{color:#b44e3e!important}.model-privacy{font-size:10px!important;color:#8e9884!important;border-top:1px solid var(--line);padding-top:12px;margin-top:15px!important}.settings-footer{position:sticky;bottom:0;background:#f6f8f1;border-top:1px solid var(--line);padding:14px 28px}.settings-save-row{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-top:9px}.settings-save-row>span{font-size:10px;color:#8c977f}#settings-feedback{font-size:11px;color:#738368}#model-badge{cursor:pointer;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#model-settings-form{min-width:0}.profile-disabled{opacity:.85}@media(max-width:700px){.settings-heading{padding:20px}.model-flow{margin:0 20px 15px;gap:12px;font-size:10px}.model-flow small{font-size:8px!important}.settings-body{display:block}.settings-nav{display:flex;gap:6px;border-right:0;border-bottom:1px solid var(--line);padding:9px 13px}.settings-nav button{margin:0;font-size:11px;padding:10px 8px}.settings-nav button small{font-size:9px}.model-profile{padding:20px}.settings-footer{padding:12px 20px}.settings-save-row>span{max-width:160px}}
+@media(max-height:650px){.settings-heading{padding:16px 22px 12px}.settings-heading h2{font-size:20px}.settings-heading .eyebrow{display:none}.model-flow{display:none}.settings-nav{padding-top:8px;padding-bottom:8px}.settings-nav button{padding-top:8px;padding-bottom:8px}.model-profile{padding-top:16px}.settings-footer{padding-top:10px;padding-bottom:10px}}
+#settings-dialog[open]{display:flex;flex-direction:column;height:min(820px,92vh);overflow:hidden}.settings-heading,.model-flow,.settings-footer{flex-shrink:0}.settings-body{flex:1;min-height:0;overflow:auto}.settings-footer{position:static}.settings-nav{position:sticky;top:0;align-self:start;z-index:1}body:has(#settings-dialog[open]){overflow:hidden}@media(max-width:700px){.settings-nav{background:#f2f5ed}.model-profile{padding-bottom:24px}}
+
+code,pre{font-family:"Reader Noto",sans-serif}
+.managing .workspace{display:none}body:not(.managing) #workbench{display:none}#workbench{overflow:auto;padding:32px;flex:1}.workbench-heading{display:flex;align-items:center;justify-content:space-between;gap:20px}.workbench-heading h1{font-size:30px;margin:8px 0}.workbench-heading p{color:var(--muted)}.workbench-controls{display:flex;gap:12px;flex-wrap:wrap;margin:25px 0 12px}.workbench-controls input,.workbench-controls select{padding:9px}.workbench-controls>input{flex:1;min-width:140px}.workbench-controls label{display:flex;align-items:center;gap:5px}#document-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}.document-card{background:white;border:1px solid var(--line);border-radius:12px;padding:20px}.document-card h2{font-size:16px;overflow-wrap:anywhere;margin-top:0}.document-card progress{width:100%;height:5px;accent-color:var(--accent)}.document-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}.builtin-note{margin:0;padding:8px 28px;background:#edf2e7;flex-shrink:0}#text-layer{user-select:text;-webkit-user-select:text}@media(max-width:600px){#workbench{padding:18px}.workbench-heading{align-items:flex-start;flex-direction:column}#document-grid{grid-template-columns:1fr}.builtin-note{font-size:10px;padding:8px 20px}}
+
+#breadcrumb-home{padding:5px 8px;color:var(--accent);text-decoration:underline;text-underline-offset:4px}.source-options{display:flex;gap:10px;flex-wrap:wrap;font-size:10px;margin:7px 0}.source-options label{display:flex;align-items:center;gap:3px}.source-options button{color:var(--accent);text-decoration:underline}.mode-help{font-size:10px;color:#667762;margin:7px 0}#web-options input{width:100%;padding:7px;font-size:11px}#web-options small{display:block;font-size:9px;color:#7c8972}.answer-section{padding:10px 0;border-top:1px solid #dce3d6;margin-top:8px}.source-label{display:block;font-size:11px;margin-bottom:8px;color:#34624a}.source-model .source-label{color:#785a36}.source-web .source-label{color:#416987}.source-web a{display:block;color:#416987;margin-top:10px;overflow-wrap:anywhere}.source-web small{font-size:9px;color:#778780}.message-quote{border-left:3px solid #8dab78;margin:0 0 12px;padding:7px 10px;background:#ffffff80}.message-quote p{margin:6px 0;max-height:170px;overflow:auto}.message-quote small,.message-quote button{font-size:10px;color:#577747}#annotation-layer{position:absolute;inset:0;pointer-events:none}.annotation-mark{position:absolute;mix-blend-mode:multiply}.annotation-mark.yellow{background:#ffe26f80}.annotation-mark.green{background:#99da9380}.annotation-mark.blue{background:#87c9f580}#annotations .note button{margin-right:8px}#context-menu{position:fixed;z-index:50;width:210px;padding:6px;background:#fff;border:1px solid var(--line);border-radius:9px;box-shadow:0 8px 30px #0002}#context-menu button{display:block;text-align:left;width:100%;padding:9px 12px;font-size:12px}#annotation-dialog blockquote{margin:12px 0;padding:10px;border-left:3px solid #8dab78;max-height:150px;overflow:auto;white-space:pre-wrap;font-size:12px}.dialog-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}#search-dialog label{display:block;margin-top:14px}#search-key{display:block;width:100%;padding:9px;margin-top:6px}.tabs{gap:18px}.compose-bottom{flex-wrap:wrap}#reader-footer{gap:6px}
+.library-views{display:flex;gap:12px;margin:18px 0;flex-wrap:wrap}.library-views button{padding:9px 18px;border:1px solid var(--line)}.library-views button.active{background:#dfe8dc;color:var(--accent)}.storage-label{font-size:10px;color:#6e806c}.document-card{cursor:pointer}.document-card:focus-visible{outline:2px solid var(--accent)}.document-card:hover{border-color:#9db99b}.settings-panels{min-width:0}.settings-panels form>button{margin-top:18px}.settings-nav{max-height:100%;overflow:auto}#web-settings-panel input[type=checkbox],#zotero-settings-panel input[type=checkbox]{width:auto}#zotero-search{display:flex;gap:10px}#zotero-query{padding:10px;flex:1;min-width:0}.zotero-item{display:block;text-align:left;width:100%;padding:16px;margin:10px 0;background:#fff;border:1px solid var(--line)}.zotero-item small{display:block;color:var(--muted)}#purge-name{width:100%;padding:10px}#plan-queries{white-space:pre-wrap;overflow-wrap:anywhere}#search-plan-dialog{max-height:90vh;overflow:auto}#text-layer{overflow:visible}#text-layer span{display:inline-block}#annotation-layer{z-index:1;overflow:visible}#text-layer{z-index:2}#highlight,#crop-box{z-index:3}.annotation-mark{min-height:2px}@media(max-width:700px){.settings-nav{flex-wrap:wrap;position:static}.settings-nav button{width:auto;flex:1;min-width:90px}}
+
+#settings-dialog.connection-view .model-flow,#settings-dialog.connection-view .builtin-note{display:none}
+#annotation-layer{mix-blend-mode:multiply}
+
+.panel-splitter{width:7px;flex-shrink:0;cursor:col-resize;touch-action:none;background:transparent}.panel-splitter:hover,.panel-splitter:focus-visible{background:#a8c6ad}.resizing-panel{user-select:none;cursor:col-resize}.web-evidence{margin-top:12px;white-space:normal}.web-evidence summary{cursor:pointer;color:#416987}.web-evidence p{font-size:11px;color:#758276}@media(min-width:851px){.assistant-panel{width:var(--chat-width,365px)}}@media(max-width:850px){.panel-splitter{display:none}}
+
+/* Reading workspace prioritizes messages; composer remains independently resizable. */
+.sidebar-hidden>.library{display:none}#toggle-library{font-size:11px;white-space:nowrap;margin-right:10px}.panel-title{padding:10px 18px 5px}.panel-title .spark{font-size:18px}.tabs button{padding:5px 4px 8px}.context{margin:8px 16px 5px;padding:5px 9px}.suggestions{margin:5px 0}.privacy-caption{margin-top:4px}.mode-help{margin:4px 0}#question{resize:vertical;min-height:52px;max-height:35vh;height:70px;overflow:auto}#messages{min-height:140px}.source-options{margin:4px 0}#chat-form{padding:7px 9px}.speech-controls{display:flex;align-items:center;gap:6px;font-size:11px;margin:4px 0}.speech-controls button{padding:3px 8px;border:1px solid var(--line)}#voice-feedback{font-size:11px;color:#52735b;max-height:90px;overflow:auto;white-space:pre-wrap}.message-actions{display:flex;gap:8px;font-size:10px;margin-top:8px}.reading-explanation{font-size:11px;margin:3px 0;color:#71816e}.reading-explanation p{margin:5px 0}.speech-note{padding:9px;border-left:2px solid #789976;background:#eff3ec;font-size:11px}#speech-settings-panel input[type=checkbox]{width:auto}
+
+.messages:has(.message)~.suggestions{display:none}body:not(.speech-output-enabled) .message-actions{display:none}.message{font-size:14px;line-height:1.8}.speech-controls[hidden]{display:none}
+
+#question{resize:none;max-height:40vh}.compose-bottom{flex-wrap:wrap;gap:8px}.compose-bottom label{font-size:12px;white-space:nowrap}.composer-grip{height:12px;cursor:ns-resize;touch-action:none;display:flex;align-items:center;justify-content:center}.composer-grip::after{content:"";width:40px;height:3px;border-radius:4px;background:#b6bcb8}.composer-grip:hover::after,.composer-grip:focus::after{background:var(--accent,#386a56)}.markdown{white-space:normal;overflow-wrap:anywhere}.markdown p{margin:0 0 .6em;white-space:pre-wrap}.markdown pre{overflow:auto;background:#f1f3f0;padding:10px;border-radius:6px;white-space:pre}.markdown code{font-family:inherit;font-size:.92em}.markdown ul,.markdown ol{padding-left:1.6em}.markdown h3,.markdown h4,.markdown h5,.markdown h6{margin:.7em 0 .4em}.markdown a{color:#376c58}#send.stop{background:#424c47}
+.document-tags{color:#47735d;font-size:12px}
+
+.settings-group{font-size:11px;color:#737f75;padding:14px 10px 5px}#speech-settings-panel fieldset{border:1px solid #dde3dc;border-radius:8px;margin:15px 0;padding:15px}#speech-settings-panel legend{font-weight:600}
+
+#chat-form{position:relative}#chat-form #send{position:absolute;right:9px;bottom:35px;width:34px;height:34px;padding:0}#chat-form #question{padding-right:45px}#mode{margin-left:auto}.source-web .markdown a{display:inline;margin:0}
+
+.markdown-table{overflow:auto}.markdown table{border-collapse:collapse;width:100%;font-size:.92em}.markdown th,.markdown td{border:1px solid #dce3d6;padding:6px;text-align:left}
+
+/* Compact reading chrome and authored annotation marks. */
+.library{transition:width .22s ease,padding .22s ease,opacity .18s ease;overflow:hidden}.sidebar-hidden>.library{display:flex;width:0;padding-left:0;padding-right:0;border-width:0;opacity:0;pointer-events:none;visibility:hidden}.library>*{flex-shrink:0}.library #documents{flex-shrink:1}
+header{height:42px;padding:0 12px}header>.breadcrumb{display:none}.compact-controls{display:flex;align-items:center;gap:3px}.compact-controls button{font-size:11px;padding:4px 6px}.toolbar{height:auto;min-height:42px;flex-wrap:wrap;gap:3px;padding:4px 8px}.toolbar .compact-controls{margin-right:auto}.toolbar button{white-space:nowrap}.reader{position:relative}.reader-body{display:flex;flex:1;min-height:0;min-width:0}.reader-body .viewport{flex:1;min-width:0}.page-previews{width:120px;flex-shrink:0;overflow:auto;background:#e9ede6;padding:8px}.page-previews button{display:block;width:100%;font-size:11px;margin-bottom:8px}.page-previews img{display:block;width:100%;height:auto;min-height:90px;background:white;border:1px solid #d5ddd1}
+#chat-form #send{width:28px;height:28px;font-size:17px;right:8px;bottom:35px;transition:background .18s,border-radius .18s,transform .18s}#send.stop{border-radius:50%;font-size:11px}#send:active{transform:scale(.88)}#chat-form #question{padding-right:70px}.microphone-button{position:absolute;right:42px;bottom:35px;width:28px;height:28px;padding:5px;color:#44725c}.microphone-button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7}.microphone-button.recording{background:#f5d9d3;color:#a54a39}.voice-cancel-row:has(button[hidden]){display:none}.playback-stop{margin-left:auto;background:#a44938;color:white;font-size:12px;padding:5px 9px}.playback-stop:hover{background:#82372c}.inline-citation{display:inline;padding:0 3px;color:#28654e;font-size:.85em;vertical-align:super;border:1px solid #bbd1bf;line-height:1.3}.coverage{display:block;color:#6c7e6c;font-size:10px;margin-bottom:6px}
+.annotation-filters{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}.annotation-filters input{width:100%;padding:7px}.annotation-filters select{max-width:48%;font-size:11px}.annotation-card{border-left-width:4px}.color-yellow{border-left-color:#d6ad20}.color-green{border-left-color:#64a664}.color-blue{border-left-color:#5896c9}.color-pink{border-left-color:#d1789b}.color-purple{border-left-color:#9364ba}.color-orange{border-left-color:#d78f42}.annotation-mark{--mark:#ebc743}.annotation-mark.green{--mark:#74ba6a}.annotation-mark.blue{--mark:#66aadb}.annotation-mark.pink{--mark:#e58cac}.annotation-mark.purple{--mark:#b083d2}.annotation-mark.orange{--mark:#efaa57}.annotation-mark.mark-highlight{background:var(--mark);opacity:.38}.annotation-mark.mark-underline{background:none;border-bottom:2px solid var(--mark)}.annotation-mark.mark-region{background:none;border:2px solid var(--mark)}.annotation-mark.mark-margin{background:none;border-left:3px solid var(--mark);transform:translateX(-7px)}.annotation-popover{position:absolute;right:18px;top:55px;max-width:300px;max-height:45%;overflow:hidden;padding:0;background:white;border:1px solid #c4d1bf;border-radius:9px;box-shadow:0 6px 22px #0002;z-index:8;display:flex;flex-direction:column}
+/* 批注弹窗可拖动（整条标题栏）与缩放（四条边 + 右下角）。标题栏不随内容滚动，缩小后仍抓得到。
+   overflow 必须是 hidden：第一版沿用了 overflow:auto，贴边的缩放手柄被裁掉、还挤出滚动条，
+   表现为"拖边没反应"。内容区自己滚动（.annotation-popover-body）。 */
+.annotation-popover-head{flex:0 0 auto;display:flex;align-items:center;gap:6px;height:26px;padding:0 8px 0 10px;border-bottom:1px solid var(--line);background:#f7f9f4;border-radius:8px 8px 0 0;cursor:move;touch-action:none}
+.annotation-popover-title{font-size:11px;color:#7c8972;white-space:nowrap}
+.annotation-popover-grip{flex:1;height:100%;display:flex;align-items:center}
+.annotation-popover-grip::after{content:"";width:40px;height:3px;border-radius:4px;background:#c6cec3}
+.annotation-popover:hover .annotation-popover-grip::after{background:#a9b6a4}
+.annotation-popover-reset{font-size:11px;color:#577747;padding:2px 6px}
+.annotation-popover-body{flex:1;min-height:0;overflow:auto;padding:12px 14px}
+.annotation-popover.dragging{user-select:none;box-shadow:0 12px 34px #0003}
+/* 缩放手柄贴在弹窗内沿：负偏移会被 overflow 裁掉，所以这里全部落在盒子里面。 */
+.annotation-resize{position:absolute;touch-action:none;background:transparent}
+.annotation-resize:hover{background:#28654e1f}
+.annotation-resize[data-dir="e"]{top:26px;bottom:12px;right:0;width:7px;cursor:ew-resize}
+.annotation-resize[data-dir="w"]{top:26px;bottom:12px;left:0;width:7px;cursor:ew-resize}
+.annotation-resize[data-dir="n"]{left:12px;right:12px;top:0;height:6px;cursor:ns-resize}
+.annotation-resize[data-dir="s"]{left:12px;right:12px;bottom:0;height:7px;cursor:ns-resize}
+.annotation-resize[data-dir="se"]{right:0;bottom:0;width:16px;height:16px;cursor:nwse-resize}
+.annotation-resize[data-dir="se"]::after{content:"";position:absolute;right:3px;bottom:3px;width:7px;height:7px;border-right:2px solid #9db99b;border-bottom:2px solid #9db99b}
+.annotation-popover p{white-space:pre-wrap;font-size:12px}.annotation-popover strong{display:block;padding-right:20px}.annotation-popover .annotation-quote{margin:6px 0;padding:6px 8px;border-left:3px solid #8dab78;background:#f6f8f3;max-height:110px;overflow:auto;white-space:pre-wrap;font-size:11px}.annotation-popover .annotation-actions{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 4px}.annotation-popover .annotation-actions button{padding:5px 8px;font-size:11px}
+/* 「添加批注 / 编辑批注」表单窗口：与阅读区弹窗共用同一套拖动/缩放接线（wireFloatingBox）。
+   标题栏固定在顶部（不随表单滚动），缩放手柄沿用 .annotation-resize 并贴在窗口内沿。
+   overflow 必须是 hidden：手柄与滚动条会互相挤（第一版阅读区弹窗就是这么失效的）。
+   width 要显式给：全局那条 dialog{width:90%} 会让这张表单占满整个窗口（宽屏下 1200px 以上），
+   内容全被拉长——用户看到的"下拉框太长"就包含这一层。拖动后由内联 width 覆盖。 */
+#annotation-dialog{width:min(560px,92vw);max-width:calc(100vw - 20px);max-height:calc(100vh - 20px);padding:0;border:1px solid #c4d1bf;border-radius:10px;background:#fff;box-shadow:0 10px 34px #0003;overflow:hidden}
+#annotation-dialog[open]{display:flex;flex-direction:column}
+#annotation-dialog.dragging{user-select:none;box-shadow:0 16px 44px #0003}
+.annotation-dialog-head{flex:0 0 auto;display:flex;align-items:center;gap:8px;height:26px;padding:0 8px 0 12px;border-bottom:1px solid var(--line);background:#f7f9f4;cursor:move;touch-action:none}
+#annotation-title{margin:0;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.annotation-dialog-grip{flex:1;height:100%;display:flex;align-items:center}
+.annotation-dialog-grip::after{content:"";width:40px;height:3px;border-radius:4px;background:#c6cec3}
+#annotation-dialog:hover .annotation-dialog-grip::after{background:#a9b6a4}
+.annotation-dialog-reset{font-size:11px;color:#577747;padding:2px 6px}
+#annotation-form{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;padding:12px 16px 14px}
+#annotation-form blockquote{margin:0 0 12px}
+/* 颜色与标记样式两栏挤在一行里，宽度按内容走。
+   注意：表单是 flex 纵向容器，直接放进去的 <select> 会被拉伸成整行宽（体验上"下拉框太长"），
+   所以它们都放在这个横向容器里，并且显式 flex:0 0 auto —— 样式选择框紧跟在颜色选择框之后。 */
+.annotation-fields{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-top:10px}
+.annotation-fields label{display:flex;align-items:center;gap:6px;white-space:nowrap}
+#annotation-color,#annotation-style{width:auto;flex:0 0 auto;min-width:0;padding:4px 7px;font-size:12px}
+/* 框选识别那两个控件（usability.js 插进来的）也落在表单里：按钮别被拉成整行宽。 */
+#annotation-form>button{align-self:flex-start}
+#annotation-content{flex:1 1 auto;min-height:76px;width:100%;resize:none}
+.note-tools{display:flex;gap:5px;font-size:11px}.note-tools button{padding:5px}.selection-tools{position:fixed;z-index:15;display:flex;gap:3px;padding:6px;border-radius:8px;background:#fff;box-shadow:0 6px 22px #0003;border:1px solid #b9c7b4}.selection-tools button{font-size:13px;padding:7px 11px}#paper{-webkit-touch-callout:none}.result mark{background:#ffe9a6;color:inherit}
+@media(prefers-reduced-motion:reduce){.library,#send{transition:none!important;animation:none!important}}
+
+.catalog-models{max-height:45vh;overflow:auto}.catalog-model{padding:9px 0;border-bottom:1px solid var(--line);overflow-wrap:anywhere}.catalog-model small{display:block;color:#7c8972}.catalog-model button{font-size:11px}.catalog-picker{background:#eff4eb;padding:12px;margin:12px 0;border-radius:8px}.catalog-picker select{width:100%;margin:6px 0;padding:7px}.manual-model{margin-top:18px}.manual-model summary{font-size:12px;cursor:pointer}
+
+.reading-report{font-size:12px;margin:8px 0;padding:8px;border:1px solid #dce5dc;border-radius:8px}.reading-report summary{cursor:pointer}.reading-report p{margin:8px 0}.source-original{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;max-height:320px;overflow:auto;padding:8px}.reading-progress{color:#486b55;font-size:13px}.reading-limits input{width:100%;padding:8px;margin:4px 0 10px}
+
+/* Iteration 18: compact chrome, transform-only PDF text scaling, shared settings layout. */
+body{font-size:var(--ui-font-size,14px)}.message,.message .markdown{font-size:var(--chat-font-size,15px)}
+.model-profile,.settings-nav button,.document-card,.note{font-size:var(--ui-font-size,14px)}
+header{flex-shrink:0;display:flex;justify-content:space-between;gap:10px;height:36px}header>.compact-controls{min-width:0;flex:1}.compact-controls .breadcrumb{display:flex;align-items:center;min-width:0;gap:6px}.breadcrumb strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;max-width:55vw}body.managing .breadcrumb{display:none}#settings{margin-left:auto;flex-shrink:0}#toggle-library{font-size:18px;width:28px;min-width:28px;margin:0;padding:0}
+.library>*{min-width:190px}.library{will-change:width}.sidebar-hidden>.library{visibility:visible}#text-layer{will-change:transform;right:auto;bottom:auto}#zoom-label{width:58px;padding:3px;text-align:center}
+.settings-heading>div{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}.settings-heading .eyebrow{display:none}.settings-heading p{margin:0;font-size:12px}.settings-heading h2{margin:0}.settings-heading{padding-bottom:12px}.builtin-note,.model-flow{display:none!important}.settings-body{margin-top:0}.settings-footer{padding-top:8px}.settings-save-row{margin-top:4px}
+.model-field:has(input[type=checkbox]){display:flex;align-items:center;gap:8px;margin:8px 0}.model-field:has(input[type=checkbox]) input{order:-1}.model-profile input[type=checkbox],.reading-limits input[type=checkbox],dialog input[type=checkbox]{width:16px;height:16px;flex:0 0 16px;margin:0;vertical-align:middle}.connection-field:has(input[type=checkbox]){display:flex;align-items:center;gap:8px}
+.provider-layout{display:grid;grid-template-columns:140px minmax(0,1fr);gap:18px}.provider-list{display:flex;flex-direction:column;gap:6px;border-right:1px solid var(--line);padding-right:10px}.provider-list button{text-align:left;padding:9px}.provider-list button.active{background:#e4eee3}.provider-detail{min-width:0}.catalog-model-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.catalog-model-head strong{min-width:0;overflow-wrap:anywhere}.model-edit{flex-shrink:0;border:1px solid var(--line);padding:3px 9px}.capability-badges{display:flex;gap:4px;flex-wrap:wrap;margin:5px 0}.capability-badges span,.tag-chip{background:#eaf1e7;border-radius:12px;padding:2px 8px;font-size:12px}.catalog-model a{font-size:11px}.catalog-models{max-height:none}
+/* 平台连接的操作按钮：保存 / 获取模型 / 删除平台同一行，且彼此留出间距。 */
+.provider-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px}
+.provider-actions .danger{margin-left:auto}
+.compose-bottom{position:relative;padding-right:68px;min-height:30px;align-items:center}#chat-form #send{position:absolute;right:0;bottom:0;width:28px;height:28px}.compose-bottom .microphone-button{position:absolute;right:34px;bottom:0;display:flex;align-items:center;justify-content:center;box-shadow:none;margin:0;padding:5px;width:28px;height:28px;line-height:1}.microphone-button:hover{background:#e9eee7}#chat-form #question{padding-right:8px}.playback-stop{display:inline-block;margin-top:8px;margin-left:0}.playback-stop[hidden]{display:none}
+.selected-overlay{position:absolute;inset:0;pointer-events:none}.selected-overlay>div{position:absolute;background:#7eb6ed55}.floating-ask{position:fixed;width:330px;background:white;border:1px solid #c9d8c4;border-radius:10px;box-shadow:0 6px 24px #0002;padding:12px;z-index:25}.floating-ask textarea{width:100%;padding:8px}.floating-ask blockquote{font-size:12px;max-height:60px;overflow:auto;margin:0 0 8px}.floating-ask button{margin:6px 6px 0 0}.region-preview{position:relative;width:100%;max-height:240px;overflow:hidden;background:#f5f5f1;border:1px solid var(--line);margin:8px 0}.region-preview img{position:absolute;max-width:none;height:auto}.page-note-badge{position:absolute;right:6px;top:6px;pointer-events:auto;z-index:7;background:#376a51;color:white;padding:4px 8px;box-shadow:0 2px 8px #0002}.page-text-dialog{width:min(850px,90vw)}.page-text-dialog textarea{display:block;width:100%;max-height:60vh;margin:10px 0;padding:12px}.tag-chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}.tag-chips~form{display:flex;gap:8px;margin:12px 0}.typography-settings{border-bottom:1px solid var(--line);padding-bottom:14px}
+.workbench-heading{position:sticky;top:0;z-index:3;background:var(--bg);display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 0;transition:padding .2s,box-shadow .2s}.workbench-heading>div{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}.workbench-heading .eyebrow{display:none}.workbench-heading h1{font-size:24px;margin:0;transition:font-size .2s}.workbench-heading p{margin:0;font-size:12px}.workbench-heading .library-views{display:flex;align-items:center;flex:1;justify-content:flex-end;gap:5px;margin:0}.library-views #workbench-import{margin-left:auto;white-space:nowrap}.compact-workbench .workbench-heading{padding:5px 0;box-shadow:0 4px 8px #00000008}.compact-workbench .workbench-heading h1{font-size:17px}.compact-workbench .workbench-heading p{display:none}
+@media(max-width:800px){.provider-layout{grid-template-columns:110px minmax(0,1fr)}.workbench-heading p{display:none}.breadcrumb strong{max-width:40vw}}
+@media(prefers-reduced-motion:reduce){.workbench-heading,.workbench-heading h1{transition:none}}
+/* 卷首题词：加缪《西西弗神话》结语，放在页头「设置」左侧。
+   只作简短引用并注明出处，不摘录任何译文段落。 */
+.header-right{margin-left:auto;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.header-right .epigraph{margin:0;font-size:11px;line-height:1.4;color:#8b9880;text-align:right;white-space:nowrap}
+.header-right .epigraph cite{font-style:normal;color:#9aa694;margin-left:6px}
+@media(max-width:900px){.header-right .epigraph{display:none}}
+/* 破坏性操作（删除平台连接、彻底删除应用数据）用同一套颜色，避免绿色主按钮误导。 */
+.danger{color:#a8462f;border:1px solid #e2c3ba;background:#fdf6f4}
+.danger:hover{background:#f7e6e1}
+#connection-remove-dialog ul{margin:8px 0;padding-left:20px;font-size:12px;color:#7c8972;line-height:1.9}
+/* 后端进程比磁盘代码旧时的提示：必须重启应用，刷新页面没用。 */
+#stale-backend{position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:60;max-width:min(680px,92vw); background:#fdecea;border:1px solid #e2b6ad;color:#8f3a2a;border-radius:9px;padding:10px 14px;font-size:12px;line-height:1.7;box-shadow:0 8px 24px #0002}
+/* 界面脚本过期（浏览器还在跑缓存的旧 JS）：与后台过期区分开，位置在它下面，点一下即刷新。 */
+#stale-frontend{position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:61;max-width:min(680px,92vw);background:#fff6e5;border:1px solid #e3c48f;color:#8a5a1a;border-radius:9px;padding:10px 14px;font-size:12px;line-height:1.7;box-shadow:0 8px 24px #0002}
+#stale-backend~#stale-frontend{top:74px}
+/* 引用精确到原文段落：定位到的每一行单独画框；定位不到时展示摘引原文。 */
+#quote-highlight{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:visible}
+/* 只有引用框本身接收点击（点一下取消这处引用高亮）：图层其余部分对指针透明，
+   因此选文、批注高亮（#annotation-layer）与一般跳转高亮（#highlight）都不受影响。 */
+#quote-highlight .quote-box{position:absolute;background:#f3d98b66;border:1px solid #d8b24a;border-radius:2px;pointer-events:auto;cursor:pointer}
+#quote-highlight .quote-box:hover{background:#f3d98ba6}
+.sources button.source-with-quote{display:block;width:100%;text-align:left;font-size:10px;line-height:1.5}
+.sources button.source-with-quote q{display:block;color:#5f6f60;font-style:normal;margin-top:2px}
+/* 扫描件识别出的选文可以直接校对：识别难免有错字，不能只能重框一次。 */
+#selection div{display:flex;align-items:center;gap:8px}
+#selection-origin{font-size:10px;color:#8b9880}
+#selection-editor{width:100%;margin-top:6px;padding:8px;font-size:12px;line-height:1.6;resize:vertical}
+/* 目录面板与缩略图并列，条目按层级缩进；当前所在小节高亮。 */
+.outline-panel{width:210px;flex-shrink:0;max-height:100%;overflow:auto;padding:10px;border-right:1px solid var(--line);background:#fbfcf8}
+.outline-panel strong{display:block;font-size:12px;margin-bottom:8px}
+.outline-item{display:block;width:100%;text-align:left;font-size:11px;padding:5px 8px;border-radius:6px;overflow-wrap:anywhere}
+.outline-item.active{background:#e2ecdc;color:#2b6549}
+#quote-preview{position:fixed;z-index:40;max-width:360px;background:#fff;border:1px solid var(--line);border-radius:9px;box-shadow:0 10px 30px #0002;padding:10px 12px;font-size:11px;line-height:1.7}
+#quote-preview q{display:block;margin-top:4px;color:#43584c}
+/* 模型调用明细：让"这次花了多少次调用、哪些是缓存输入"在界面上可核对。 */
+.usage-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:6px}
+.usage-table th,.usage-table td{border-bottom:1px solid var(--line);padding:4px 6px;text-align:right}
+.usage-table th:first-child,.usage-table td:first-child{text-align:left}
+
+/* 对话区的问答字号控件：最常读的文字就在这里，调整入口也放在这里。
+   「设置 → 快捷键与阅读 → 字号」是同一个值的另一处入口，两处共用 --chat-font-size。 */
+.chat-toolbar{display:flex;align-items:center;gap:6px;justify-content:flex-end;padding:6px 2px 2px;font-size:11px;color:var(--muted)}
+.chat-toolbar button{padding:3px 10px;border:1px solid var(--line);background:#fff;border-radius:7px;font-size:12px;line-height:1.3}
+.chat-toolbar button:hover{border-color:#9db99b;background:#f4f8f2}
+.chat-toolbar output{min-width:2.2em;text-align:center;font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink)}
+/* 输入框与读到的回答用同一档字号：调大之后立刻能看出效果。 */
+#question{font-size:var(--chat-font-size,15px)}
+
+/* 跨文献范围：勾选「跨文献」后直接在这一行选，不再弹对话框（用户指出弹窗那一步多余）。
+   形态按用户要求：先选范围类型（全部文献 / 指定文献 / 标签），再在旁边的框里选具体项。
+   字号固定，不跟着「界面字号」被放大。 */
+.scope-picker{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);max-width:100%;flex-wrap:wrap}
+.scope-picker-label{white-space:nowrap}
+.scope-picker select{font-size:12px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink);padding:2px 4px}
+.scope-picker select#cross-scope-kind{min-width:6.5em}
+.scope-picker select.scope-list{max-width:min(260px,52vw);max-height:12vh}
+.scope-picker select:focus-visible{outline:2px solid #659b7d;outline-offset:2px}
+.scope-count{white-space:nowrap;font-size:11px}
+
+/* 音色：取回之后要能直接选。原先只挂了 datalist——浏览器只在输入时才提示、没有可见的
+   下拉箭头，用户"看不到下拉选择"，所以取回后用同一个位置的选择框替换掉文字输入框。 */
+.voice-picker{width:100%;padding:8px 10px;font-size:12px}
+.voice-picker[hidden]{display:none}
+/* 必读的提醒（例如"在线识别会把这一页发到 MinerU 的服务器"）：红色、不加图标以外的装饰。 */
+.warn{color:#a8442c!important;font-weight:600}
+
+/* ===== 翻译：阅读区右侧的译文栏 =====
+   阅读区的横向容器是 `.reader-body`（由 experience.js 建出来，里面依次是页面缩略图、
+   目录面板、#viewport）。译文栏作为它的**同级兄弟**插到末尾，于是天然就是"页面右侧一栏"：
+   与 #viewport 并排、各自滚动，工具栏与底栏仍占满整宽。
+   实测过一次布局：一开始把面板挂到 `.reader` 上并改成 grid，结果是面板掉到
+   `reader-body` 下面一行（也就是用户否掉的"底部一块"）——位置必须跟着 reader-body 走。
+   译文按原段落排版（与 #paper 同样的白底与行距），不是一堆纯文本。 */
+.translation-panel{flex:0 0 45%;max-width:60%;min-width:220px;display:flex;flex-direction:column;background:#f7f8f3;position:relative;border-left:1px solid var(--line)}
+/* hidden 属性必须真的隐藏：这条面板自己声明了 display:flex，会盖住 [hidden]{display:none} 的通用规则。 */
+.translation-panel[hidden]{display:none!important}
+.translation-selection[hidden]{display:none!important}
+.translation-source-layer[hidden]{display:none!important}
+@media(max-width:850px){.translation-panel{flex:1 1 auto;max-width:none;border-left:0;border-top:1px solid var(--line)}}
+.translation-head{display:flex;align-items:center;gap:10px;padding:8px 16px 8px 12px;border-bottom:1px solid var(--line);background:#fff;flex-wrap:wrap}
+.translation-title{display:flex;align-items:baseline;gap:10px;flex:0 1 auto;min-width:0}
+.translation-title b{font-size:14px;flex:0 0 auto}
+.translation-state{font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.translation-state.error{color:#a8443b}
+/* 按钮换行，**不做横向滚动**：横向滚动时超出的按钮会被容器裁掉（实测「独立窗口」的
+   getBoundingClientRect 已经越过容器右边界，elementFromPoint 命中的是标题栏本身），
+   于是按钮看着在、点不动。换行只是让标题栏多一行，所有按钮都仍然可点。
+   右侧留出 16px：面板右边缘紧邻会话面板的分栏条（`.panel-splitter`，同样可拖分栏、
+   z-index 更高），按钮压在那 7px 上同样点不动。 */
+.translation-actions{display:flex;gap:6px;align-items:center;flex:1 1 auto;min-width:0;flex-wrap:wrap;padding-right:16px}
+.translation-actions button{font-size:11px;padding:4px 8px;white-space:nowrap}
+.translation-actions button.active{background:#dfe8dc;color:#2f634b}
+/* 分栏条只占面板左侧那一条：它从 top:0 拉到 bottom:0，宽度覆盖到面板外 4px，
+   而右侧紧邻的正是会话面板的 `.panel-splitter`（z-index:5、同样可拖分栏）——
+   实测 elementFromPoint 在「独立窗口」按钮上命中的就是那条会话分栏条，按钮点不动。
+   所以这里只向外伸 2px、总宽 5px，并把区域限制在标题栏以下（clip-path 顶部留 40px）。 */
+.translation-splitter{position:absolute;left:-2px;top:0;bottom:0;width:5px;cursor:col-resize;touch-action:none;background:transparent;display:flex;align-items:center;justify-content:center;clip-path:inset(40px 0 0 0)}
+/* 抓手：用 CSS 画一条细线，不用任何字形（字体里没有的字符会让 check_licenses.py 失败）。 */
+.translation-splitter span{display:block;width:3px;height:44px;border-radius:4px;background:#c6cec3}
+.translation-splitter:hover span,.translation-splitter[data-dragging] span{background:#8fae95}
+.translation-splitter:hover,.translation-splitter:focus-visible,.translation-splitter[data-dragging]{background:#a8c6ad55}
+/* 状态行右侧是译文自己的字号控件（100% = 与原文一致）：只影响译文，不动原文页。 */
+.translation-statusbar{display:flex;align-items:center;gap:10px;padding:8px 22px 0}
+.translation-status{margin:0;padding:0;font-size:11px;color:var(--muted);flex:1 1 auto;min-width:0}
+.translation-font{display:flex;align-items:center;gap:4px;flex:0 0 auto}
+.translation-font-label{font-size:11px;color:var(--muted)}
+.translation-font button{font-size:11px;padding:3px 7px;min-width:26px}
+.translation-font button.active{background:#dfe8dc;color:#2f634b}
+.translation-segments{flex:1;overflow:auto;padding:12px 22px 34px}
+/* ===== 译文正文：一整页连续排版 =====
+   用户要求"仍旧按照原文的排版的一整页"，所以这里**不是**一块一块的卡片：
+   整页共用一个白底容器（与 #paper 一致的观感），段落之间只有自然段距，没有卡片边框。
+   每段的校对工具（改/重译/恢复）鼠标移上去才出现，不打断整页阅读。 */
+/* 整页白底（与 #paper 同一观感）。字号由 JS 按 PDF 版面写进 --page-font：
+   栏宽一变，字号等比跟着变——与 PDF 阅读器的缩放是同一个原理。 */
+.translation-page{position:relative;background:#fff;border-radius:4px;box-shadow:0 2px 12px #283a3210;max-width:820px;font-size:var(--page-font,14px);padding:calc(var(--page-font,14px) * 1.8) calc(var(--page-font,14px) * 2) calc(var(--page-font,14px) * 2.2)}
+/* 正文**单栏连续排版**：分栏会把长段落从中间劈开（用户反馈"段落有时候会从中间截断"），
+   而且译文栏只有三四百像素宽，两栏每栏只剩十几个字。所以这里不用 CSS 多栏。
+   .translation-paragraph 把"同一个自然段被切开的那几段"包在一起：段内不留段距，
+   读者看到的就是一个连续的自然段。 */
+.translation-flow{display:block}
+.translation-paragraph{display:block}
+.translation-paragraph>.translation-segment+.translation-segment{margin-top:0}
+/* 译文上的批注：**沿用原文那一套样式与色板**（见上面的 .annotation-mark.mark-*）。
+   原文是"文字底下的半透明色块"，译文里没有独立的图层，所以高亮用同色的半透明背景。
+   整段标记挂在段落上（.translation-text.has-mark-*），部分标记挂在选中的那几个字上
+   （.translation-mark.has-mark-*）——两者共用同一套样式。 */
+.translation-text.has-mark-highlight,.translation-mark.has-mark-highlight{background:color-mix(in srgb, var(--mark,#ebc743) 38%, transparent);border-radius:2px}
+.translation-text.has-mark-underline,.translation-mark.has-mark-underline{text-decoration:underline;text-decoration-color:var(--mark-line,#ebc743);text-decoration-thickness:2px;text-underline-offset:3px}
+.translation-text.has-mark-margin,.translation-mark.has-mark-margin{border-left:3px solid var(--mark,#ebc743);padding-left:10px}
+.translation-text.has-mark-region,.translation-mark.has-mark-region{outline:2px solid var(--mark,#ebc743);outline-offset:2px;border-radius:2px}
+.translation-badge.badge-truncated{background:#fbe3d8;color:#96502f}
+.translation-segment.has-annotations{cursor:pointer}
+.translation-page-notes{margin:0 0 .8em;column-span:all}
+.translation-page-notes button{font-size:11px;padding:2px 8px}
+.translation-segment{position:relative;border-radius:4px;break-inside:avoid}
+.translation-segment+.translation-segment{margin-top:.75em}
+.translation-segment.state-stale{background:#fffcf3;box-shadow:inset 3px 0 0 #e2c98a;padding-left:10px}
+.translation-segment.state-missing{color:var(--muted)}
+.translation-segment.edited{box-shadow:inset 3px 0 0 #9dc3a5;padding-left:10px}
+.translation-segment:hover{background:#fbfcf8}
+/* 页眉/页脚与注释：不参与正文流动，单独排在整页的开头/结尾（默认显示原文、不翻译）。
+   它们是"识别出来的附属信息"，所以给一层淡底与说明文字，和正文区分开。 */
+.page-furniture,.page-notes{border-radius:4px;background:#f7f8f5;box-shadow:inset 0 0 0 1px #e7eae3;padding:.5em .7em;margin:0 0 .9em;column-span:all}
+.page-notes{margin:.9em 0 0}
+.page-furniture-label{margin:0 0 .35em;font-size:11px;color:var(--muted)}
+.page-furniture-item{display:flex;align-items:flex-start;gap:8px;font-size:.92em;color:#5f6a5f}
+.page-furniture-item+.page-furniture-item{margin-top:.3em}
+.page-furniture-item:hover{background:#f1f5ef;border-radius:3px}
+.page-furniture-text{margin:0;flex:1 1 auto;white-space:pre-wrap;word-break:break-word}
+.page-furniture-item button{flex:0 0 auto;font-size:10px;padding:2px 7px}
+.translation-segment-marks{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px;opacity:0;transition:opacity .12s}
+.translation-segment:hover .translation-segment-marks,.translation-segment:focus-within .translation-segment-marks{opacity:1}
+.translation-badge{font-size:10px;padding:1px 7px;border-radius:20px;background:#eef2ea;color:#5d6f60;white-space:nowrap}
+.translation-badge.badge-saved{background:#e6efe4;color:#3d6a4a}
+.translation-badge.badge-reused{background:#eef2ea;color:#5d6f60}
+.translation-badge.badge-stale{background:#fbeccd;color:#8a6420}
+.translation-badge.badge-missing{background:#f2f2ee;color:#8a8f86}
+.translation-badge.badge-service{background:#eef1f6;color:#4d6178}
+.translation-badge.badge-unchanged{background:#f6e7e5;color:#96524a}
+/* 译文正文：字号继承整页的 --page-font（按 PDF 版面换算），行距略放宽便于屏上阅读。 */
+.translation-text{margin:0;font-size:inherit;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+.translation-source-text{margin:6px 0 0;font-size:12px;color:#6d7a70}
+.translation-source-text summary{cursor:pointer;font-size:11px}
+.translation-source-text p{margin:4px 0 0;white-space:pre-wrap}
+.translation-segment-tools{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;opacity:0;transition:opacity .12s}
+.translation-segment:hover .translation-segment-tools,.translation-segment:focus-within .translation-segment-tools{opacity:1}
+.translation-segment-tools button{font-size:10px;padding:3px 8px}
+.translation-editor{width:100%;font:inherit;font-size:15px;line-height:1.9;padding:8px}
+/* 「只看译文」：把原文页整块收起来，译文栏占满阅读区。 */
+body.translation-only #viewport,body.translation-only .translation-splitter{display:none!important}
+body.translation-only .translation-panel{flex:1 1 auto;max-width:none;border-left:0}
+body.translation-only .translation-page{max-width:none}
+/* 悬停某段译文时在原文页上标出的对应区域。 */
+.translation-source-layer{position:absolute;inset:0;pointer-events:none;z-index:4}
+.translation-locate{position:absolute;border:1px solid #6f9f7d;background:#a9d0a766;border-radius:3px}
+.translation-selection{position:fixed;right:22px;bottom:22px;width:min(430px,calc(100vw - 44px));max-height:58vh;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 34px #29392f26;padding:12px 14px;z-index:60}
+.translation-selection-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+.translation-selection-head>div{display:flex;gap:6px}
+.translation-selection small{color:var(--muted);font-size:10px}
+.translation-selection p{margin:4px 0 8px;white-space:pre-wrap;word-break:break-word}
+.translation-selection-target{background:#f4f8f2;border-radius:8px;padding:7px 9px}
+.translation-selection-meta{margin:0!important}
+/* 批注页的双语块：类名刻意不叫 .translation-source——那个类在"只看译文"时会被隐藏，
+   而用户明确要求批注页**始终**同时显示原文与译文。 */
+.annotation-bilingual{margin-top:8px;border-top:1px dashed var(--line);padding-top:7px}
+.annotation-bilingual small{color:var(--muted);font-size:10px}
+.annotation-bilingual p{margin:3px 0 7px;white-space:pre-wrap}
+/* 独立译文窗口：只留译文栏，隐藏原文页与阅读区上下控件。 */
+body.standalone-translation #toolbar,body.standalone-translation #reader-footer,body.standalone-translation #viewport{display:none}
+body.standalone-translation .translation-panel{flex:1 1 auto;max-width:none}
+/* 窄屏（<850px）时阅读区本来就是上下排列：分栏条从"竖条"改成"横条"。 */
+@media(max-width:850px){
+  .translation-splitter{left:0;right:0;top:-4px;bottom:auto;width:auto;height:9px;cursor:row-resize}
+}
+/* 侧栏品牌位：**图标 + 文字**。
+   图标用一个方形容器承载（图片文件是方的，绝不能让它被拉伸——图标一变形就废了）；
+   文字那一列自己控制字号，不吃 .brand 的 46px（那是给旧版"单个大字的品牌位"定的，
+   品牌位改成图标 + 文字之后就一直由 .brand-name 自己顶掉它）。 */
+.brand-mark{width:46px;height:46px;flex:0 0 auto;display:block;border-radius:11px}
+.brand-name{display:flex;flex-direction:column;justify-content:center;font:400 21px/1.15 "Reader Noto",sans-serif;letter-spacing:0}
+/* 副标题（"本地 · 深度阅读空间"）保留原来的观感：10px 小字 + 一点字距。
+   字距从 2px 收到 1px 是因为它现在排在图标右边、可用宽度只有 142px——2px 会顶到侧栏边缘。 */
+.brand-name small{margin-top:2px;letter-spacing:1px}
+
+/* Phase 8：四个平级勾选框收成两个受控下拉（智能阅读 / 智能来源）。
+   这一行是"每次提问都要看"的控制区，所以字号固定 12px、不跟着问答字号膨胀；
+   两个下拉各自限宽，窄屏时整组换行而不是挤压输入框。 */
+.reading-picker{display:flex;align-items:center;gap:6px;font-size:12px;white-space:nowrap;flex-wrap:wrap}
+.reading-picker>span{color:var(--muted)}
+.reading-picker select{font-size:12px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink);padding:2px 4px;max-width:11em}
+.reading-picker select:focus-visible{outline:2px solid #659b7d;outline-offset:2px}
+@media(max-width:820px){.reading-picker select{max-width:8.5em}}
+
+/* 第 89 轮：「边生成边显示」的临时正文与选项说明。
+   临时正文必须一眼看出**还没有逐段核对**（核对完成后后台会整段替换），
+   因此用左侧竖线 + data-note 标题把它与最终回答区分开。 */
+.answer-draft{white-space:pre-wrap;margin:6px 0;padding:8px 10px;border-left:3px solid var(--line);
+  border-radius:6px;background:rgba(0,0,0,.03);color:var(--ink);opacity:.9}
+.answer-draft::before{content:attr(data-note);display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+.reading-hint{margin:4px 2px 0;font-size:12px;line-height:1.55;color:var(--muted)}
+.reading-limits summary{cursor:pointer;color:var(--muted);font-size:13px;margin:6px 0}
+.model-common{margin:6px 0 12px}
+
+/* 第 90 轮：选项说明改成**点击弹出**，不再常驻占输入区一行。
+   第 93 轮按反馈再收两次：最后只剩一个 10px 的问号，无边框、无底色、无下划线，
+   和旁边的下拉标签同高但不占宽度。 */
+.reading-help{font-size:10px;line-height:1;padding:0;border:0;background:none;color:var(--muted);
+  opacity:.6;align-self:center;width:1.4em;height:1.4em;border-radius:50%;cursor:help}
+.reading-help:hover{opacity:1;color:var(--ink)}
+.reading-help:focus-visible{outline:1px solid #659b7d;outline-offset:1px}
+.reading-help-dialog,.scope-dialog{max-width:min(560px,92vw);border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:var(--paper);color:var(--ink)}
+.reading-help-dialog::backdrop,.scope-dialog::backdrop{background:rgba(0,0,0,.35)}
+.reading-help-dialog h3,.scope-dialog h3{margin:0 0 8px;font-size:15px}
+.reading-help-dialog form{margin-top:10px;text-align:right}
+.scope-picker{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0}
+.scope-picker .scope-list{width:100%;min-height:9em}
+.scope-count{color:var(--muted);font-size:12px}
+.scope-count.warn{color:#a4442f}
+.scope-summary{font-size:12px;padding:2px 8px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--muted)}
+.scope-summary.warn{border-color:#a4442f;color:#a4442f}
+.dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
+

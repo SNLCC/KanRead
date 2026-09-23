@@ -1,0 +1,22 @@
+Required Notice: Copyright (c) 2026 KanRead contributors
+
+PolyForm Noncommercial License 1.0.0
+https://polyformproject.org/licenses/noncommercial/1.0.0
+
+This software is licensed, not sold. The full terms are in the LICENSE file
+next to this notice, or at the URL above.
+
+In short (the LICENSE text governs, this summary does not):
+- any noncommercial purpose is permitted, including use by charitable,
+  educational, public research, public safety or health, environmental
+  protection, and government institutions, regardless of funding source;
+- you may change the software and distribute copies, provided recipients also
+  receive these terms (or the URL above) and this notice;
+- commercial use is not permitted without a separate license from the licensor.
+
+Third-party components: see legal/THIRD-PARTY.md. The project name and icon are
+not licensed with the code; see legal/BRAND.md.
+
+Note: this file is the plain-text notice required by the license. It is not
+legal/NOTICE.html, which is the browsable licence page the application shows
+to users and which lists third-party components.

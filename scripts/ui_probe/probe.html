@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><title>批注弹窗拖动探针</title>
+<link rel="stylesheet" href="../../static/style.css">
+<style>html,body{margin:0;height:100%}</style>
+</head>
+<body>
+<div class="workspace" style="height:100%">
+  <section class="reader">
+    <div id="toolbar"><button id="crop" type="button">框选识别</button></div>
+    <div id="viewport" style="flex:1;position:relative;overflow:auto">
+      <div id="paper" style="position:relative;width:520px;height:420px;background:#fff;margin:0 auto"></div>
+    </div>
+    <div id="crop-box" style="display:none"></div>
+  </section>
+</div>
+<pre id="probe-report"></pre>
+<script>
+// 收集页面里的错误，探针结束后一并报告。
+window.__errors=[];
+window.addEventListener('error',event=>window.__errors.push('error: '+event.message));
+window.addEventListener('unhandledrejection',event=>window.__errors.push('rejection: '+event.reason));
+// 与 app.js 完全一致的两个工具函数；探针只加载真实的“批注弹窗”那一段代码。
+const $=selector=>document.querySelector(selector);
+const el=(tag,cls,text)=>{const node=document.createElement(tag);if(cls)node.className=cls;if(text!==undefined)node.textContent=text;return node;};
+const state={annotations:[],page:1,pageData:null,crop:false,busy:false};
+const annotationStyles={highlight:'高亮',underline:'下划线',margin:'段落侧线',region:'区域框选',page:'整页批注'};
+const annotationColors={yellow:'黄色'};
+function annotationKind(a){return a.rects.length?(a.style||'highlight'):'page';}
+function askAboutAnnotation(){}
+function openAnnotation(){}
+async function deleteAnnotation(){return true;}
+</script>
+</body></html>

@@ -1,0 +1,27 @@
+# 仓库内的文本一律用 LF。
+#
+# 为什么需要这个文件：本仓库的基线是 LF，而 `core.autocrlf=false`——于是任何以 CRLF
+# 写入的新行都会被 `git diff --check` 判成"行尾空白"（这是本项目的验收项之一），
+# 并且会让整份文件在 diff 里看不出真实改动（第 103 轮实测：13 个文件、804 行误报）。
+# Windows 上的 Python `Path.write_text`、以及部分编辑器默认写 CRLF，正是它反复混进来的来源。
+#
+# 有了下面这条，工作区与仓库内都被固定为 LF，写入端的默认行为不再影响提交内容。
+* text=auto eol=lf
+
+# 二进制资源不做行尾转换（字体、图标、可执行文件、PDF 等）。
+*.ico binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.otf binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
+*.pdf binary
+*.exe binary
+*.onnx binary
+*.zip binary
+
+# 依赖锁定文件按逐字节校验（legal/inventory.json 里的 lock_sha256 是它的 sha256），
+# 因此必须始终保持 LF，任何行尾变化都算"已复核内容被改动"。
+requirements.lock.txt text eol=lf

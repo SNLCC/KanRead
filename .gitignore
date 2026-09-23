@@ -1,0 +1,45 @@
+# ---- 用户数据：文献、数据库、批注、笔记、译文（绝不入库）----
+data/
+.env
+tmp/
+
+# ---- 本地运行时产物 ----
+.venv/
+node_modules/
+__pycache__/
+.pytest_cache/
+*.pyc
+.pytest-tmp/
+pytest-cache-files-*/
+scripts/cleanup-last-run.log
+ptb-*/
+probe*/
+.test-*/
+.demo-ui-*/
+
+# ---- 私有文档：开发过程资料，只在本机保留，不随发布 ----
+HANDOFF.md
+READING_PLAN.md
+STATUS_2026-09-16.md
+ITERATION_18.md
+PRD.md
+ARCHITECTURE.md
+CHANGELOG.md
+RELEASING.md
+legal/COMPLIANCE.md
+legal/COMPLIANCE-LOG.md
+
+# ---- 私有工具（只服务本机与发布动作，不进公开仓库）----
+# 公开的是产品本身，不是发布流程。这些工具各自在做什么，见 RELEASING.md。
+# 注意：本文件不支持行尾注释——文件名后面写说明会被当成模式的一部分，所以只列名字。
+scripts/publish.ps1
+scripts/check_publish_safe.py
+scripts/pytest_sandbox_tmp.py
+
+# 旧开发历史的归档（含未公开文档，不随发布）
+docs/kanread-archive.bundle
+*.bundle
+
+# 开发测试：只为开发与回归服务，不随发布（文件保留在本机）
+tests/
+
