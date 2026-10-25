@@ -104,7 +104,7 @@ def _mimo_transcribe(profile, binary, language):
         }]}],
         'asr_options': {'language': _language_code(language, mimo=True)},
     }
-    with httpx.Client(timeout=90, trust_env=model_services.use_proxy(profile)) as client:
+    with httpx.Client(timeout=90, **model_services.client_options(profile['base_url'])) as client:
         data = _post(client, profile['base_url'] + '/chat/completions',
                      headers=_auth(profile, required=True), json=payload).json()
     return _chat_text(data)
@@ -137,7 +137,7 @@ def _mimo_synthesize(profile, text, voice):
                                      '请改用 mimo-v2.5-tts（预置音色）或 mimo-v2.5-tts-voicedesign（文字描述音色）。')
         messages = [{'role': 'assistant', 'content': text}]
         audio['voice'] = voice.strip() or 'mimo_default'
-    with httpx.Client(timeout=120, trust_env=model_services.use_proxy(profile)) as client:
+    with httpx.Client(timeout=120, **model_services.client_options(profile['base_url'])) as client:
         data = _post(client, profile['base_url'] + '/chat/completions',
                      headers=_auth(profile, required=True),
                      json={'model': model, 'messages': messages, 'audio': audio}).json()
@@ -163,7 +163,7 @@ def _minimax_transcribe(profile, binary, language):
     code = _language_code(language)
     if code:
         headers['language'] = code
-    with httpx.Client(timeout=120, trust_env=model_services.use_proxy(profile)) as client:
+    with httpx.Client(timeout=120, **model_services.client_options(profile['base_url'])) as client:
         data = _post(client, profile['base_url'] + '/speech_to_text', headers=headers,
                      files={'file': ('speech.wav', binary, 'audio/wav')},
                      data={'model': profile['model'], 'response_format': 'json', 'stream': 'false'}).json()
@@ -206,7 +206,7 @@ def _mimo_voices(model):
 
 def _minimax_voices(profile):
     """MiniMax 有官方的音色列表接口，会一并返回该账户自己克隆/生成的音色，所以必须实调。"""
-    with httpx.Client(timeout=60, trust_env=model_services.use_proxy(profile)) as client:
+    with httpx.Client(timeout=60, **model_services.client_options(profile['base_url'])) as client:
         data = _post(client, profile['base_url'] + '/get_voice',
                      headers=_auth(profile, required=True), json={'voice_type': 'all'}).json()
     if not isinstance(data, dict):
@@ -273,7 +273,7 @@ def _minimax_synthesize(profile, text, voice):
         'voice_setting': {'voice_id': voice.strip(), 'speed': 1, 'vol': 1, 'pitch': 0},
         'audio_setting': {'format': 'wav', 'sample_rate': 32000, 'channel': 1},
     }
-    with httpx.Client(timeout=180, trust_env=model_services.use_proxy(profile)) as client:
+    with httpx.Client(timeout=180, **model_services.client_options(profile['base_url'])) as client:
         data = _post(client, profile['base_url'] + '/t2a_v2',
                      headers=_auth(profile, required=True), json=payload).json()
     if not isinstance(data, dict):
@@ -295,7 +295,7 @@ def _minimax_synthesize(profile, text, voice):
 
 def _openai_transcribe(profile, binary, language):
     data = {'model': profile['model']}
-    with httpx.Client(timeout=90, trust_env=model_services.use_proxy(profile)) as client:
+    with httpx.Client(timeout=90, **model_services.client_options(profile['base_url'])) as client:
         payload = _post(client, profile['base_url'] + '/audio/transcriptions',
                         headers=model_services.headers(profile),
                         files={'file': ('speech.wav', binary, 'audio/wav')}, data=data).json()
@@ -308,7 +308,7 @@ def _openai_transcribe(profile, binary, language):
 
 
 def _openai_synthesize(profile, text, voice):
-    with httpx.Client(timeout=90, trust_env=model_services.use_proxy(profile)) as client:
+    with httpx.Client(timeout=90, **model_services.client_options(profile['base_url'])) as client:
         with client.stream('POST', profile['base_url'] + '/audio/speech',
                            headers=model_services.headers(profile),
                            json={'model': profile['model'], 'input': text,

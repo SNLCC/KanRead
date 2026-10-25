@@ -11,7 +11,22 @@ const zoomStep=(direction,percent)=>zoomPercent(percent+direction*ZOOM_STEP_PERC
 const currentZoomPercent=()=>{const field=$('#zoom-label');if(field&&field.tagName==='INPUT'){const shown=Number(field.value);if(Number.isFinite(shown)&&shown>=ZOOM_MIN_PERCENT&&shown<=ZOOM_MAX_PERCENT)return Math.round(shown);}return Math.round(state.zoom*100);};
 const state = {docs:[], doc:null, page:1, zoom:1, pageData:null, selection:'', selectionRects:[], annotations:[], crop:false, renderId:0, busy:false, answering:false, toolBusy:false, selectionOrigin:''};
 const el = (tag, cls, text) => {const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n;};
-async function api(path, options={}) {const r=await fetch('/api'+path,options);if(!r.ok){let msg='请求失败（HTTP '+r.status+'）';try{const j=await r.json();msg=typeof j.detail==='string'?j.detail:JSON.stringify(j.detail);}catch{}throw new Error(msg);}return r.json();}
+// 本机访问令牌由服务端随页面注入（window.__KANREAD_TOKEN）。所有 /api/* 请求都带上它：
+// 其他网站或本机其他网页应用拿不到这枚令牌，无法直接调用本地接口。
+const localToken=()=>window.__KANREAD_TOKEN||'';
+async function api(path, options={}) {
+ let r;
+ try{
+  const headers={...(options.headers||{})};
+  if(localToken())headers['X-KanRead-Token']=localToken();
+  r=await fetch('/api'+path,{...options,headers});
+ }catch(error){
+  // 网络层失败（后台正在退出/被结束）时给一句能照做的说明，而不是 "Failed to fetch"。
+  throw new Error('连不上本机后台：请确认应用没有被关闭，然后刷新页面或重新打开勘读。');
+ }
+ if(!r.ok){let msg='请求失败（HTTP '+r.status+'）';try{const j=await r.json();msg=typeof j.detail==='string'?j.detail:JSON.stringify(j.detail);}catch{}throw new Error(msg);}
+ return r.json();
+}
 const post=(path,data,method='POST')=>api(path,{method,headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
 // 提示条必须能盖住模态设置面板：浏览器把 <dialog>.showModal() 放进 top layer，
 // 那里的元素永远画在普通 z-index 之上，所以只调 z-index 没用（用户报告的正是
@@ -405,7 +420,19 @@ $('#chat-form').onsubmit=async e=>{
   if(body.web){const plan=await sendRequest('/search-plan',body);if(plan.skip){body.search_token='';}else{body.search_token='';if(plan.review&&!await approveSearchPlan(plan)){body.web=false;}else body.search_token=plan.token||'';}}
   if(task.stopped)return;
   if(typeof trackReadingProgress==='function')finishReadingProgress=trackReadingProgress(task,pending);
-  const result=await sendRequest('/chat',body);if(task.stopped)return;
+  let result=await sendRequest('/chat',body);if(task.stopped)return;
+  if(result&&result.needs_confirmation){
+   // 发送前预算闸门：先告知"预计读多少页/token"，用户确认才继续。
+   // 取消时把本轮当成"用户主动取消"处理：不显示失败、不产生阅读进度、问题回到输入框。
+   const proceed=typeof confirmBudget==='function'?await confirmBudget(result.budget):false;
+   if(!proceed||task.stopped){
+    questionMessage?.remove();pending?.remove();questionMessage=null;pending=null;
+    if(!task.stopped)toast('已取消：本轮没有读取文献，也没有产生阅读进度');
+    return;
+   }
+   body.confirm_budget=true;
+   result=await sendRequest('/chat',body);if(task.stopped)return;
+  }
   pending.remove();pending=null;addMessage('assistant',result.answer,result.sources,result.metadata);
   if(typeof voiceOriginal!=='undefined')voiceOriginal='';if(typeof autoSpeakAnswer==='function')autoSpeakAnswer(result.answer);
  }catch(err){failureMessage=err.message;if(!task.stopped)toast(err.message);}
@@ -439,7 +466,7 @@ openDoc=async function(d){$('#library-home').classList.add('active');document.qu
 // 磁盘上的代码已经更新，但正在运行的后台进程还是旧的——本项目改的是后端，只刷新页面不够。
 // 更麻烦的是：旧后台进程不会因为"重新双击图标"而消失（启动器只在没人应答时才拉起新进程），
 // 所以这里把可行的做法一并写清楚。
-const REQUIRED_API_VERSION = 46;
+const REQUIRED_API_VERSION = 47;
 function staleBackendBanner(){
  let node=$('#stale-backend');
  if(!node){node=el('div');node.id='stale-backend';node.setAttribute('role','alert');document.body.append(node);}
@@ -466,7 +493,7 @@ async function refreshModelStatus(){
   const s=await api('/status');
   $('#model-badge').textContent=s.ai?s.model:'未配置模型';
   $('#model-badge').title='点击配置会话与 RAG 模型';
-  $('#privacy').textContent=s.ai?'已配置模型 · 相关原文将发送到所选服务':(s.embedding?'仅检索模式 · 使用已配置的语义检索服务':'本地 RAG · TF-IDF 向量 / 词项重排序 / OCR 已内置');
+  $('#privacy').textContent=s.ai?'已启用会话模型 · 问题、选区与相关原文会发送到该服务；检索与 OCR 仍在本机':(s.embedding?'已启用语义检索服务 · 待索引文本与检索问题会发送到该服务；阅读与 OCR 仍在本机':'未启用外部服务 · 全部在本机处理（TF-IDF / 词项重排序 / OCR）');
   checkFrontendFreshness(s.asset_version);
   const version=Number(s.api_version||0);
   if(version<REQUIRED_API_VERSION){
@@ -520,12 +547,15 @@ $('#question').addEventListener('input',updateSendButton);
 // 既没有托盘图标也不会退出，用户看不见也管不着。
 // 想让后台常驻（例如自己在浏览器里长期使用），启动前设 READER_KEEP_SERVER=1。
 let sessionStream=null;
-function sessionConnect(){try{if(window.EventSource&&!sessionStream)sessionStream=new EventSource('/api/session/stream');}catch{}}
-function sessionPing(){post('/session/ping',{}).catch(()=>{});}
+// 心跳/关闭这两个接口无法自定义请求头，令牌只能走查询参数；这里直接读 window 上的令牌，
+// 不依赖本文件里 api() 附近的局部定义（这样单测只抽取这一段也能跑）。
+function sessionTokenQuery(){return '?token='+encodeURIComponent(window.__KANREAD_TOKEN||'');}
+function sessionConnect(){try{if(window.EventSource&&!sessionStream)sessionStream=new EventSource('/api/session/stream'+sessionTokenQuery());}catch{}}
+function sessionPing(){post('/session/ping'+sessionTokenQuery(),{}).catch(()=>{});}
 function sessionClosed(){
  clearInterval(sessionTimer);
  try{sessionStream?.close();}catch{}
- try{navigator.sendBeacon('/session/close',new Blob(['close'],{type:'text/plain'}));}catch{}
+ try{navigator.sendBeacon('/api/session/close'+sessionTokenQuery(),new Blob(['close'],{type:'text/plain'}));}catch{}
 }
 sessionConnect();sessionPing();
 const sessionTimer=setInterval(sessionPing,20000);

@@ -1,0 +1,9 @@
+/* 发送前预算确认对话框。复用既有变量与按钮样式，不引入新配色。 */
+
+.budget-confirm{max-width:520px}
+.budget-confirm h2{margin:0 0 10px;font-size:18px;color:var(--ink)}
+.budget-confirm-facts{background:#fbfcf7;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.budget-confirm-facts p{margin:0 0 6px;font-size:12px;color:var(--ink);display:flex;gap:10px;flex-wrap:wrap}
+.budget-confirm-facts p:last-child{margin-bottom:0}
+.budget-confirm-facts strong{color:var(--muted);font-weight:400;min-width:64px}
+.budget-confirm .hint{margin:10px 0 0}

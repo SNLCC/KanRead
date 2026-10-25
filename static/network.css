@@ -1,0 +1,20 @@
+/* 「网络」设置面板：三态代理、检测事实表格、连接自检结果。 */
+.network-panel h4{margin:22px 0 8px;font-size:14px}
+.network-panel p{margin:0 0 8px}
+.network-detected{margin:16px 0 12px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.network-fact{display:flex;gap:14px;padding:10px 14px;border-bottom:1px solid var(--line);font-size:12px;align-items:baseline;flex-wrap:wrap}
+.network-fact:last-child{border-bottom:0}
+.network-fact-label{flex:0 0 118px;color:#6e806c;font-weight:600}
+.network-fact-value{flex:1;min-width:0;overflow-wrap:anywhere}
+.network-form{margin:6px 0 4px}
+.network-manual{margin:10px 0 4px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#f7f9f4}
+.network-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 8px}
+.network-actions button{font-size:12px;padding:9px 14px}
+.network-status{margin:6px 0 12px;font-size:11px;color:#6e806c;min-height:1.4em;overflow-wrap:anywhere}
+.network-status.error{color:#b4553f}
+.network-probe{margin-top:20px;padding-top:14px;border-top:1px solid var(--line)}
+.network-probe-result{margin:8px 0 4px;padding:10px 12px;border:1px solid var(--line);border-radius:6px;
+  background:#f2f5ed;font-size:12px;line-height:1.6;overflow-wrap:anywhere;white-space:pre-wrap}
+.network-probe-result:empty{display:none}
+.network-probe-result.error{border-color:#d8b4a8;background:#fbf1ee;color:#8d3f2c}
+@media(max-width:700px){.network-fact-label{flex-basis:100%}}

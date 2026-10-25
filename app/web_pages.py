@@ -1,4 +1,12 @@
-"""Opt-in public web text. Pinned public IPs, no cookies, auth or private-network access."""
+"""Opt-in public web text. Pinned public IPs, no cookies, auth or private-network access.
+
+**这条路径故意不接「网络」页的三态代理（app/network.py）**，永远直连：
+它防的是 SSRF / DNS rebinding——先把域名解析成一组**固定公共 IP**，再直连这个 IP、
+只把原域名放进 ``Host`` 头（TLS 的 SNI 也用原域名），因此"解析一次、连接同一个地址"。
+一旦交给代理，代理会自己重新解析域名，固定 IP 就失效了：攻击者可以让一个域名先解析到
+公网、再解析到内网，绕过这里的检查。所以：不读用户配置的代理，也不读环境变量代理
+（``trust_env=False``）。需要代理才能访问的站点，本程序不会去抓它的正文。
+"""
 import ipaddress
 import socket
 from html.parser import HTMLParser
@@ -33,6 +41,7 @@ def destination(url):
 def fetch(url):
     for _ in range(4):
         cancellation.check();target,hostname=destination(url)
+        # trust_env=False 是安全前提，不是"还没接代理"：见文件头的 SSRF/DNS rebinding 说明。
         with httpx.Client(timeout=15,trust_env=False,follow_redirects=False) as client:
             cancellation.attach(client)
             with client.stream('GET',target,headers={'Host':hostname,'User-Agent':'LiteratureReader/1.0','Accept':'text/html,text/plain'},extensions={'sni_hostname':hostname}) as response:

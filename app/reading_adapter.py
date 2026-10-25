@@ -2,30 +2,42 @@
 import hashlib
 import re
 from functools import lru_cache
-from . import pdf_engine,cancellation,structure_store
+from . import pdf_engine,cancellation,structure_store,page_masks
 from .literature_core.structure import text_quality,section_tree,expand_sections,heading,layout_text,visual_nodes
 
 
 @lru_cache(maxsize=256)
-def native_page(path,version,page):
-    saved=structure_store.page_get(path,('layout-v1',*version),page)
-    if saved is not None:return saved
+def native_page(path,version,page,regions=()):
+    """一页的阅读文本与版式信号。``regions`` 是该页生效的遮罩矩形（归一化 4 元组序列）。
+
+    遮罩按矩形过滤 spans，不改 PDF；带遮罩的结果**不写** structure_store 的持久缓存：
+    那份缓存以文件内容版本为键，若把"某一种遮罩组合"的排版写进去，用户删掉规则后
+    仍会读到被裁过的页。内存 lru_cache 已经按 regions 区分，重复翻页不会重复解析。
+    """
+    if not regions:
+        saved=structure_store.page_get(path,('layout-v1',*version),page)
+        if saved is not None:return saved
     with pdf_engine.open_pdf(path) as pdf:
         item=pdf[page-1]
         try:
             data=pdf_engine.page_data(item)
+            if regions:data=page_masks.filter_page_data(data,regions)
             text,two=layout_text(data['spans'],data['width'])
             # Retain text when a PDF has no usable geometry.
             text=text or data['text']
             images=sum(1 for _ in item.get_objects(filter=[pdf_engine.raw.FPDF_PAGEOBJ_IMAGE]))
             result={'text':text,'two_columns':two,'nodes':visual_nodes(text,page),'quality':text_quality(text),'images':images}
-            structure_store.page_put(path,('layout-v1',*version),page,result)
+            if not regions:structure_store.page_put(path,('layout-v1',*version),page,result)
             return result
         finally:item.close()
 
 
 @lru_cache(maxsize=32)
-def document_structure(path,version,total):
+def document_structure(path,version,total,regions=()):
+    """章节树。``regions`` 是整篇规则（``(page,x0,y0,x1,y1)``），扫描标题时按页展开。
+
+    有 PDF 自带书签时不扫正文，规则自然也用不上；只有"标题规则"回退路径读页文本。
+    """
     from pypdf import PdfReader
     entries=[]
     try:
@@ -41,7 +53,7 @@ def document_structure(path,version,total):
     if not entries:
         for page in range(1,total+1):
             cancellation.check()
-            data=native_page(path,version,page)
+            data=native_page(path,version,page,page_masks.split_regions(regions,page))
             for line in data['text'].splitlines():
                 item=heading(line)
                 if item:entries.append({**item,'page':page,'origin':'标题规则（可能不完整）'})
@@ -49,16 +61,41 @@ def document_structure(path,version,total):
 
 
 def planning_context(host,body,history):
-    doc=host.document(body.document_id);path=host.document_path(doc);stat=path.stat()
-    tree=document_structure(str(path),(stat.st_size,stat.st_mtime_ns),doc['pages'])
-    return {'history':history,'document':doc['name'],'page':body.page,'pages':doc['pages'],
-            'outline':[{'title':n['title'],'page':n['page'],'end':n['end_page']} for n in tree[:80]],
-            'outline_complete':len(tree)<=80,'cross_documents':body.cross_book}
+    from . import doc_navigation
+    doc=host.document(body.document_id)
+    try:
+        path=host.document_path(doc);stat=path.stat()
+    except Exception as exc:
+        # 附件不可用（被删/被移动/Zotero 变化）：大纲与导航都读不到，但规划上下文本身
+        # 不该在这里抛错——真正读原文时 document_path 会再抛一次，并给出可照做的说明。
+        # 导航层因此如实写"无法核对"，不会假装已启用；outline 为空只会让范围判断更保守。
+        detail=str(getattr(exc,'detail','') or exc)[:200]
+        return {'history':history,'document':doc['name'],'page':body.page,'pages':doc['pages'],
+                'outline':[],'outline_complete':False,'cross_documents':body.cross_book,
+                'navigation':{'enabled':False,'state':'missing','nodes':[],
+                              'reason':'附件不可用，无法读取大纲或导航索引：'+detail}}
+    # 大纲也必须是遮罩后的：被屏蔽的页眉如果像标题（"第 3 章 …"），
+    # 它会混进阅读范围判断，让模型以为章节从噪声位置开始。
+    tree=document_structure(str(path),(stat.st_size,stat.st_mtime_ns),doc['pages'],
+                            page_masks.all_regions(doc['id']))
+    context={'history':history,'document':doc['name'],'page':body.page,'pages':doc['pages'],
+             'outline':[{'title':n['title'],'page':n['page'],'end':n['end_page']} for n in tree[:80]],
+             'outline_complete':len(tree)<=80,'cross_documents':body.cross_book}
+    # 导航层**只追加**一个可选的落点参考：不删减 outline、不改 pages/范围上限。
+    # 规划器把它当"还应该看哪几页"的提示；它不进证据、不进回答、不参与核验，
+    # 未生成/未启用/过期时 enabled=False 并给出原因（规划照旧按原有口径走）。
+    try:
+        context['navigation']=doc_navigation.planning_view(doc['id'],(stat.st_size,stat.st_mtime_ns))
+    except Exception as exc:
+        # 导航是可选加速项：它自己出错不能把范围判断打挂，但必须说清为什么没启用。
+        context['navigation']={'enabled':False,'state':'missing','nodes':[],
+                               'reason':'导航索引不可用：'+str(exc)[:200]}
+    return context
 
 
 @lru_cache(maxsize=128)
-def extracted_page(path,version,page,ocr):
-    data=native_page(path,version,page)
+def extracted_page(path,version,page,ocr,regions=()):
+    data=native_page(path,version,page,regions)
     text=data['text'];kind='native_text'
     if not data['quality']['suspect'] or not ocr:return text.replace('\r\n','\n').replace('\r','\n'),kind
     with pdf_engine.open_pdf(path) as pdf:
@@ -69,15 +106,19 @@ def extracted_page(path,version,page,ocr):
     # OCR is CPU-heavy and does not need the PDFium lock: keep page turns responsive.
     try:recognized,lines=pdf_engine.recognize_layout(image)
     finally:image.close()
+    # 行框先换算成页面比例。**完整**行框进 _ocr_layout（缓存以页为键，会跨"有无遮罩"复用），
+    # 遮罩只裁这一次要返回的文本：否则删掉规则后，定位会以为那些行从来不存在。
+    page_width,page_height=image.width,image.height
+    normalized=[{'text':line['text'],'bbox':[line['bbox'][0]/page_width,line['bbox'][1]/page_height,
+                                            line['bbox'][2]/page_width,line['bbox'][3]/page_height]}
+                for line in lines if line.get('bbox') and page_width and page_height]
+    if regions:
+        recognized='\n'.join(line['text'] for line in page_masks.filter_boxes(normalized,regions))
     if recognized and (not text or text_quality(recognized)['bad_ratio']<data['quality']['bad_ratio']):
         text=recognized;kind='ocr'
-        # 保留识别到的行框（换算成页面比例）：扫描页没有文本层，
-        # 引用要能落到具体区域就只能靠它。内存缓存 + 调用方决定是否落库。
-        page_width,page_height=image.width,image.height
-        _ocr_layout[(str(path),version,page)]=[
-            {'text':line['text'],'bbox':[line['bbox'][0]/page_width,line['bbox'][1]/page_height,
-                                        line['bbox'][2]/page_width,line['bbox'][3]/page_height]}
-            for line in lines if line.get('bbox') and page_width and page_height]
+        # 保留识别到的行框：扫描页没有文本层，引用要能落到具体区域就只能靠它。
+        # 内存缓存 + 调用方决定是否落库。
+        _ocr_layout[(str(path),version,page)]=normalized
     return text.replace('\r\n','\n').replace('\r','\n'),kind
 
 
@@ -174,7 +215,9 @@ def read_documents(host,body,plan):
         cancellation.check()
         path=host.document_path(doc);stat=path.stat();version=(stat.st_size,stat.st_mtime_ns)
         pages=set(range(1,doc['pages']+1))
-        tree=document_structure(str(path),version,doc['pages'])
+        # 整篇规则取一次：每页只做一次元组筛选，不再每页查一次库。
+        masks=page_masks.all_regions(doc['id'])
+        tree=document_structure(str(path),version,doc['pages'],masks)
         if doc['id'] in located:
             pages=expand_sections(located[doc['id']],tree,doc['pages'])
         read=[];missing=[];ocr_pages=[];quality_pages=[];unparsed=[];nodes=[];columns=[]
@@ -185,15 +228,21 @@ def read_documents(host,body,plan):
         for page in sorted(pages):
             cancellation.check()
             from . import parsing
+            regions=page_masks.split_regions(masks,page)
             saved=parsing.get(doc['id'],page,path)
             cancellation.progress('读取本机已保存的原文' if saved is not None else '解析原文 / 空文本页本机识别',
                 len(read)+len(missing)+1,len(pages))
-            text,kind=saved if saved is not None else extracted_page(str(path),version,page,True)
-            if saved is None and kind=='ocr' and text:
+            text,kind=saved if saved is not None else extracted_page(str(path),version,page,True,regions)
+            # 带遮罩的 OCR 文本**不能落库**：page_edits 里的整页文本没有几何坐标，
+            # 一旦把"按规则裁过的版本"存进去，用户删掉规则后阅读仍会读到裁过的页——
+            # 屏蔽就变成不可逆的了。代价是这类页在规则生效期间每次重新识别，
+            # 这是"可撤销"必须付的成本（扫描页的边界见视觉读取与遮罩模块的注释）。
+            if saved is None and kind=='ocr' and text and not regions:
                 parsing.cache(doc['id'],page,path,text,kind)
                 # 行框一并保存：重启后仍然能把引用定位到扫描页的具体区域。
+                # 行框是**完整**的（extracted_page 只在返回值里裁遮罩），定位时再按规则过滤。
                 parsing.cache_boxes(doc['id'],page,path,_ocr_layout.get((str(path),version,page)) or [])
-            info=native_page(str(path),version,page)
+            info=native_page(str(path),version,page,regions)
             if info['two_columns']:columns.append(page)
             nodes.extend(info['nodes'])
             cancellation.check()

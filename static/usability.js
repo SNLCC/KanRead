@@ -83,6 +83,7 @@ async function buildParsingSettings(){try{const cfg=await api('/parsing-settings
  // 只保留一条**随模式变化**的说明：用户明确要求去掉堆积的小字，只留下必须知道/必须暴露的内容
  // （地址含义、MinerU 是独立项目、在线服务会把页面传出去）。
  const modeNote=el('p','hint','');form.append(modeNote);
+ form.append(el('p','model-privacy','解析服务是外部服务：选择在线解析（MinerU 在线）或允许远程识别后，页面图像/文件会发送到所选解析服务（自建服务用你填写的地址，MinerU 在线用其官方地址）；选择本机识别则只在本机处理。'));
  const url=el('input');url.type='url';url.setAttribute('aria-label','解析服务地址');url.value=cfg.service_url||'';url.placeholder='例如 http://localhost:8000';
  const urlRow=el('label','model-field');urlRow.append(el('span','','解析服务地址（MinerU / 自定义解析服务）'),url);form.append(urlRow);
  const key=el('input');key.type='password';key.autocomplete='new-password';key.setAttribute('aria-label','解析服务访问令牌');

@@ -13,6 +13,12 @@ def headers(profile):
 
 
 def use_proxy(profile):
+    """兼容层（**仓库内已无调用点**）：旧调用点只问"要不要读环境变量代理"（bool）。
+
+    代理三态、系统代理与绕过规则都在 :mod:`app.network` 里，调用点统一写
+    ``**model_services.client_options(base_url)``；联网搜索也已接入三态。
+    保留本函数是因为既有测试与外部/历史调用仍按这个 bool 契约使用，删除会破坏它们。
+    """
     host=urlsplit(profile['base_url']).hostname or ''
     if host=='localhost' or host.endswith('.local'):
         return False
@@ -21,6 +27,17 @@ def use_proxy(profile):
         return not (ip.is_private or ip.is_loopback)
     except ValueError:
         return True
+
+
+def client_options(target_url):
+    """把「这一跳实际怎么走」展开成 ``httpx.Client`` 的 kwargs。
+
+    所有模型/解析/翻译/语音调用点都用同一行 ``**model_services.client_options(base_url)``，
+    这样三态代理（跟随系统 / 手动 / 直连）、本机直连与绕过列表只在 app/network.py 实现一次。
+    这里做一层转发而不是直接 import，是为了保持与既有调用点（model_services.xxx）一致的写法。
+    """
+    from . import network
+    return network.client_options(target_url)
 
 
 class ResponseFormatError(ValueError):
@@ -117,7 +134,7 @@ def service_error(exc):
 def rerank(query,chunks,profile):
     if not chunks:
         return []
-    with httpx.Client(timeout=90,trust_env=use_proxy(profile)) as client:
+    with httpx.Client(timeout=90,**client_options(profile['base_url'])) as client:
         r=client.post(profile['base_url']+'/rerank',headers=headers(profile),json={
             'model':profile['model'],'query':query,'documents':[c['text'] for c in chunks],
             'top_n':min(8,len(chunks)),'return_documents':False})
@@ -140,7 +157,7 @@ def probe(body, models=False):
     body=body.model_copy(update={'enabled':True})
     profile=settings.resolve(body.kind,body,require_model=not models)
     try:
-        with httpx.Client(timeout=httpx.Timeout(60,connect=5),trust_env=use_proxy(profile)) as client:
+        with httpx.Client(timeout=httpx.Timeout(60,connect=5),**client_options(profile['base_url'])) as client:
             if models:
                 params={'sub_type':{'chat':'chat','embedding':'embedding','rerank':'reranker'}[body.kind]} if profile['provider']=='siliconflow' else {}
                 r=client.get(profile['base_url']+'/models',headers=headers(profile),params=params)

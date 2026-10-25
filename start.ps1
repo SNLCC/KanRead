@@ -26,4 +26,7 @@ Write-Host '勘读 · KanRead: http://127.0.0.1:8765'
 # 已有后台在跑时不会被这次启动替换掉：先检查接口版本，旧版本要结束掉，
 # 否则浏览器用的是新前端、接口却还是旧代码（最难自查的一种状态）。
 & './.venv/Scripts/python.exe' -c "from app.single_instance import stop_stale; from app.version import API_VERSION; state, detail = stop_stale(8765, API_VERSION, log=print); print(state, detail)"
-& './.venv/Scripts/python.exe' -m uvicorn app.main:app --host 127.0.0.1 --port 8765
+# 日志要和「勘读.exe」那条启动路径一致：都写 data/application.log（2MB 轮转、保留 5 份）。
+# 原来这里直接跑 `python -m uvicorn`，uvicorn 不会往这个文件写日志，用户关掉控制台窗口后
+# 就什么都不剩了。用 -c 在同一个进程里先配置日志再启动，两条路径共用 app/logging_setup.py。
+& './.venv/Scripts/python.exe' -c 'from app.logging_setup import configure; configure(); import uvicorn; uvicorn.run(''app.main:app'', host=''127.0.0.1'', port=8765, log_config=None, access_log=False)'

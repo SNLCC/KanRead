@@ -70,6 +70,11 @@ with db() as c:
     # 这个字段只用来把标记精确画在译文的那一段文字上。老库自动补列，老批注留空即可。
     if 'translation_excerpt' not in {r[1] for r in c.execute('PRAGMA table_info(annotations)')}:
         c.execute("ALTER TABLE annotations ADD COLUMN translation_excerpt TEXT DEFAULT ''")
+    # 从 Zotero 迁移过来的批注要记住来源条目标识：重复导入时用它去重，
+    # 也避免把用户在应用里改过的同一条批注再覆盖回去。普通批注留空。
+    if 'external_key' not in {r[1] for r in c.execute('PRAGMA table_info(annotations)')}:
+        c.execute("ALTER TABLE annotations ADD COLUMN external_key TEXT DEFAULT ''")
+    c.execute('CREATE INDEX IF NOT EXISTS annotation_external ON annotations(document_id, external_key)')
     if 'deleted' not in {r[1] for r in c.execute('PRAGMA table_info(notes)')}:c.execute('ALTER TABLE notes ADD COLUMN deleted INTEGER DEFAULT 0')
 
     columns={r[1] for r in c.execute('PRAGMA table_info(documents)')}
@@ -95,6 +100,13 @@ async def local_only(request: Request, call_next):
     origin = request.headers.get("origin")
     if origin and origin != str(request.base_url).rstrip("/"):
         return Response("Invalid origin", 403)
+    # 本机访问令牌：只有本应用页面带着启动时注入的随机令牌才能调用 /api/*。
+    # Host/Origin 拦的是"浏览器跨站"，令牌额外拦住"本机其他网页应用直接调用"。
+    from . import local_access
+    if local_access.needs_token(request.url.path) and not local_access.authorized(request):
+        return JSONResponse(status_code=401, content={'detail':
+            '本机访问令牌缺失或已过期：请重新打开「勘读」窗口（启动器会换发新令牌），'
+            '不要从其他页面直接调用本地接口。'})
     return await call_next(request)
 
 
@@ -115,7 +127,12 @@ def page_document(doc_id, page):
 
 def document_path(meta):
     path=Path(meta['external_path']) if meta.get('storage_kind')=='zotero' else DATA/f"{meta['id']}.pdf"
-    if not path.is_file(): raise HTTPException(404,'附件不可用；Zotero 文件可能已移动，请在 Zotero 页面重新连接此附件。')
+    # 缺失原因要按存储方式区分：应用副本缺失是"data 里的文件被删了"，与 Zotero 移动无关；
+    # 两类都用同一句"Zotero 文件可能已移动"会把用户引到错误的排查方向。
+    if not path.is_file():
+        if meta.get('storage_kind')=='zotero':
+            raise HTTPException(404,'附件不可用；Zotero 文件可能已移动，请在 Zotero 页面重新连接此附件，或在文献工作台点「附件缺失」重新连接。')
+        raise HTTPException(404,'附件不可用；应用内副本可能已被删除，请在文献工作台点「附件缺失」重新连接一份 PDF。')
     if meta.get('storage_kind')=='zotero' and meta.get('file_stamp')!=f'{path.stat().st_size}:{path.stat().st_mtime_ns}':
         raise HTTPException(409,'Zotero 附件已改变，请重新连接以更新索引。原有批注保留，但位置需核对。')
     return path
@@ -156,18 +173,43 @@ class DocumentAuthor(BaseModel):
 
 
 @lru_cache(maxsize=24)
-def cached_page(path, stamp, page, image):
+def cached_page(path, stamp, page, image, mask_key=()):
+    """一页的页面数据或渲染图。``mask_key`` 是归一化遮罩矩形元组，参与缓存键。
+
+    遮罩只是**读取时**的过滤，PDF 字节不动，所以同一文件版本可以同时存在
+    "无遮罩"与若干"带遮罩"的缓存条目：没设规则的文献照旧命中旧条目，
+    设了规则的位置由 mask_key 区分，规则一改键就变，不会读到旧的裁后结果。
+    """
     with pdf_engine.open_pdf(Path(path)) as pdf:
         p=pdf[page-1]
-        try: return pdf_engine.page_png(p) if image else pdf_engine.page_data(p)
+        try:
+            if image: return pdf_engine.page_png(p)
+            data=pdf_engine.page_data(p)
+            if mask_key:
+                from . import page_masks
+                data=page_masks.filter_page_data(data,mask_key)
+            return data
         finally: p.close()
 
 
 def page_result(doc_id,page,image=False):
     meta=document(doc_id)
     if page<1 or page>meta['pages']: raise HTTPException(400,'页码超出范围')
-    path=document_path(meta);stat=path.stat()
-    return cached_page(str(path.resolve()),(stat.st_size,stat.st_mtime_ns),page,image)
+    path=document_path(meta);stat=path.stat();stamp=(stat.st_size,stat.st_mtime_ns)
+    resolved=str(path.resolve())
+    if image:
+        # 图像仍是完整一页：遮罩是阅读辅助，不是改写后的新 PDF。前端在图像上叠
+        # 半透明遮罩层，用户对照原页/截图时看到的仍是原始版面。
+        return cached_page(resolved,stamp,page,True)
+    from . import page_masks
+    view=page_masks.for_page(doc_id,page)
+    data=cached_page(resolved,stamp,page,False,view['regions'])
+    # lru_cache 返回的是共享字典，必须复制：直接往里面塞 masks 会让
+    # 该缓存键的所有使用者都看到"某一页"的规则列表。
+    result=dict(data)
+    result['masks']=view['masks']
+    result['masks_revision']=view['revision']
+    return result
 
 
 class Progress(BaseModel):
@@ -190,6 +232,9 @@ class Search(BaseModel):
     web: bool = False
     # 用户显式要求"参考整篇文献"：自动判断只是默认值，必须留一个不会判错的开关。
     whole_document: bool = False
+    # 发送前预算闸门：预估读取量超过阈值时，后端先返回 needs_confirmation；
+    # 用户确认后前端带上这个标记重发，才真正开始读。它不改变读取范围，只表示"已知悉成本"。
+    confirm_budget: bool = False
     web_query: str = Field(default='', max_length=1500)
     search_token: str = Field(default='',max_length=100)
     # Phase 8：把界面上那四个平级开关收成两个受控选项。
@@ -341,9 +386,12 @@ def index():
     # 浏览器会继续用缓存的旧文件——用户看到的现象是"改了但没生效"。现在按静态文件的
     # 最新修改时间生成，属于同一个部署就必然一致，也不需要在多处同步维护。
     page = (ROOT / "static" / "index.html").read_text(encoding="utf-8")
+    # 本机访问令牌随页面注入：页面脚本把它带给 /api/*，其他网站/其他本机网页拿不到它。
+    # 每次进程启动换一枚，重启后旧页面会得到 401 并提示重新打开窗口。
+    from .local_access import TOKEN
+    page = page.replace("__ASSET_VERSION__", asset_version()).replace("__LOCAL_TOKEN__", TOKEN)
     # HTML 不缓存：否则浏览器可能一直拿着旧的版本号，新资源永远加载不到。
-    return Response(page.replace("__ASSET_VERSION__", asset_version()), media_type="text/html",
-                    headers={"Cache-Control": "no-cache"})
+    return Response(page, media_type="text/html", headers={"Cache-Control": "no-cache"})
 
 
 def asset_version():

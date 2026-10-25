@@ -1,0 +1,35 @@
+/* 首次使用引导与「快速开始」帮助层。
+   只使用既有样式变量（--ink/--muted/--accent/--line），不引入新配色，
+   避免和主界面的"纸质 + 墨绿"观感打架。 */
+
+.onboarding-steps{margin:0 0 14px;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:#fbfcf7}
+.onboarding-steps-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.onboarding-steps-head strong{font-size:13px;color:var(--ink)}
+.onboarding-ol{margin:0;padding-left:18px;display:grid;gap:6px;font-size:12px;color:var(--muted)}
+.onboarding-ol strong{color:var(--ink);margin-right:6px}
+.onboarding-ol .hint{display:inline;margin:0}
+.onboarding-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+
+.link-button{background:none;border:0;padding:0 2px;color:var(--accent);text-decoration:underline;font-size:11px;cursor:pointer}
+.link-button:hover{color:var(--ink)}
+
+.onboarding-note{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 10px;padding:8px 10px;border-radius:10px;background:#fff7e6;border:1px solid #ecdcb4;color:#7a5a17;font-size:11px}
+.onboarding-note span{flex:1 1 auto;min-width:180px}
+
+.onboarding-help{max-width:640px}
+.onboarding-help-head h2{margin:0 0 4px;font-size:18px;color:var(--ink)}
+.onboarding-help-head p{margin:0}
+.onboarding-help-list{display:grid;gap:2px;margin:14px 0 4px;max-height:52vh;overflow:auto}
+.onboarding-help-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid var(--line)}
+.onboarding-help-row:last-child{border-bottom:0}
+.onboarding-help-text{flex:1 1 auto;min-width:0}
+.onboarding-help-text strong{display:block;font-size:13px;color:var(--ink)}
+.onboarding-help-text p{margin:2px 0 0}
+.onboarding-status{margin:10px 0 0;font-size:11px;color:var(--muted);background:#f6f8f2;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+
+.onboarding-first-run{max-width:560px}
+.onboarding-first-run h2{margin:0 0 6px;color:var(--ink)}
+.onboarding-first-run .onboarding-ol{margin-top:14px;font-size:12px}
+.onboarding-first-run .onboarding-ol li{margin-bottom:8px;color:var(--muted)}
+.onboarding-first-run .onboarding-ol li strong{display:block;margin:0 0 2px}
+.onboarding-first-run .onboarding-ol p{margin:0}

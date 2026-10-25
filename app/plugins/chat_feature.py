@@ -809,7 +809,7 @@ def install(router, host):
         def live_client():
             client=client_slot['client']
             if client is None or getattr(client,'is_closed',False):
-                client=host.httpx.Client(timeout=90,trust_env=host.model_services.use_proxy(profile))
+                client=host.httpx.Client(timeout=90,**host.model_services.client_options(profile['base_url']))
                 # 重建的客户端同样挂到本次作业上：用户点"停止"依然能立刻掐断；
                 # 作业结束时由 `cancellable` 统一关闭（见 cancellation.py），不留悬挂连接。
                 host.cancellation.attach(client)
@@ -946,7 +946,7 @@ def install(router, host):
             # 模型可用的两条路共用同一个客户端：**缺口查证**（整轮只有一节外部补充，不重读文献）
             # 与**文献分析**（读原文 → 形成分析 → 核对）。此前缺口那条路落在 `with` 块外面，
             # `compose_external` 因此拿不到这个闭包变量，整个接口 502。
-            with host.httpx.Client(timeout=90, trust_env=host.model_services.use_proxy(profile)) as model_client:
+            with host.httpx.Client(timeout=90, **host.model_services.client_options(profile['base_url'])) as model_client:
                 host.cancellation.attach(model_client)
                 # 这个客户端是首选；万一它被关掉，`live_client()` 会另建一个顶上（见上面的说明）。
                 client_slot['client']=model_client
@@ -980,8 +980,7 @@ def install(router, host):
                     # 阅读任务的标识**不含对话历史**（第 96 轮）：部分阅读下每轮都会落一条进度，
                     # 而历史每轮都不同——带上历史就等于每问一次多出一张"尚未完成的阅读"卡片，
                     # 同一本书同一问题会堆成好几条。标识只认"读哪本书、问什么、用哪个模型"。
-                    task_store=ReadingStore(host.DATA,{'task_version':2,'payload':resume_payload,'model':profile['model'],'base':base},host.scope_ids(body))
-                    task_store.remember(resume_payload)
+                    # task_store 的建立与 remember 移到预算闸门之后：用户取消时不应留下"未完成阅读"。
                     # 用户显式要求整篇阅读时，跳过范围判断：这是唯一不会被自动判断改写的路径。
                     if body.reading_scope=='local':
                         # 「本页与相邻页」：用户**显式**选定的范围。此前这个选项没有落到任何分支
@@ -1023,6 +1022,16 @@ def install(router, host):
                                 if sweep['report']['added_pages'] else ''))
                     else:
                         coverage_extra={}
+                    # 预算闸门：在真正读原文之前，把"预计读多少页、约多少 token"告诉用户。
+                    # 只读本机索引做估算，不调用模型、不改读取范围；确认后前端带 confirm_budget
+                    # 重发同一请求，才会走到下面的 read_documents。
+                    from app import budget_gate
+                    budget_preview=budget_gate.check(host,body,plan)
+                    if budget_preview is not None:
+                        return {'needs_confirmation':True,'budget':budget_preview,
+                                'answer':'','sources':[],'metadata':{}}
+                    task_store=ReadingStore(host.DATA,{'task_version':2,'payload':resume_payload,'model':profile['model'],'base':base},host.scope_ids(body))
+                    task_store.remember(resume_payload)
                     sources,coverage=read_documents(host,body,plan)
                     coverage.update(coverage_extra)
                 else:

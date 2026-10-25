@@ -74,14 +74,42 @@ async function confirmConnectionRemoval(connection){
   else impact.append(el('p','hint','当前没有用途引用这个平台连接。'));
  }catch(e){impact.textContent=e.message;}
 }
-function modelPicker(kind,current,onApplied){const box=el('div','catalog-picker');box.append(el('strong','','从已连接平台选择'));const select=el('select');select.setAttribute('aria-label',capabilityLabels[kind]+'已连接模型');select.append(new Option('请选择模型',''));const values=[];for(const c of catalogConnections)for(const m of c.models||[])if(m.capabilities.includes(kind)){const index=values.push({connection_id:c.id,model:m.id})-1;select.append(new Option(c.name+' / '+m.id+' ['+m.source+']',String(index)));if(current?.connection_id===c.id&&current?.model===m.id)select.value=String(index);}box.append(select);
- const apply=el('button','secondary','使用此模型');apply.type='button';apply.onclick=async()=>{if(!select.value)return toast('请先选择模型');apply.disabled=true;try{await post('/model-assignments/'+kind,{...values[Number(select.value)]},'PUT');await onApplied();await refreshModelStatus();toast('当前用途已切换到所选模型');}catch(e){toast(e.message);}finally{apply.disabled=false;}};box.append(apply);
+// 用途面板里的模型选择器。
+//
+// 这里**不再**提供单独的"应用"按钮：用户反馈那个按钮是多余的一步——从下拉框选完
+// 还要再点一下才真正切换。现在下拉只把选择写进待保存状态（settings.js 的 pendingModelPicks），
+// 由页脚的「保存模型设置（三项用途）」一次提交三个用途，模型切换与启用状态同时落库。
+function modelPicker(kind,current){
+ const box=el('div','catalog-picker');box.append(el('strong','','从已连接平台选择'));
+ const select=el('select');select.setAttribute('aria-label',capabilityLabels[kind]+'已连接模型');select.append(new Option('请选择模型（保存后生效）',''));
+ // 面板重建时仍回显尚未保存的选择，否则刷新一下就会把用户刚选的值弄丢。
+ const shown=pendingModelPicks[kind]||current;
+ const values=[];
+ for(const c of catalogConnections)for(const m of c.models||[])if(m.capabilities.includes(kind)){const index=values.push({connection_id:c.id,model:m.id,base_url:c.base_url})-1;select.append(new Option(c.name+' / '+m.id+' ['+m.source+']',String(index)));if(shown?.connection_id===c.id&&shown?.model===m.id)select.value=String(index);}
+ box.append(select);
+ const hint=el('p','hint','选择后点下方「保存模型设置（三项用途）」即生效；这里不会单独保存。');
+ box.append(hint);
+ select.onchange=()=>{
+  const chosen=select.value===''?null:values[Number(select.value)];
+  if(!chosen){delete pendingModelPicks[kind];hint.textContent='已取消选择：保存时保留已保存的模型不变。';updateProfileHelp(kind);return;}
+  pendingModelPicks[kind]={connection_id:chosen.connection_id,model:chosen.model,base_url:chosen.base_url};
+  // 选了模型却忘了勾「启用」，保存后这个用途仍然不生效；这里自动勾上（用户仍可手动取消）。
+  const toggle=profileNode(kind,'enabled');
+  if(toggle)toggle.checked=true;
+  hint.textContent=`已选择 ${chosen.model}：点下方「保存模型设置（三项用途）」后生效。`;
+  updateProfileHelp(kind);
+  profileMessage(kind,'已选择模型，保存后生效。');
+  $('#settings-feedback').textContent='有未保存的修改。点击下方「保存模型设置（三项用途）」后生效。';
+  $('#settings-feedback').classList.remove('error');
+ };
  if(!values.length)box.append(el('p','hint','还没有已连接的模型支持这一用途：请先在「模型服务」添加平台并获取（或手动标注）模型。'));
  return box;}
 async function refreshCatalogPickers(){
  catalogConnections=await api('/connections');
  modelSettings=await api('/settings');
  $('#model-profile-panels').replaceChildren();modelKinds.forEach(buildProfile);decorateModelPickers();
+ // 重建后面板会全部可见：按当前栏目重新收起其余用途，否则三个用途会一起显示。
+ switchModelTab(activeSettingTab);
  await buildCatalogSettings();await buildSpeechSettings();}
 // 用途面板只保留一条主路径：从「模型服务」里已连接的平台选择模型。
 //
@@ -95,7 +123,7 @@ async function refreshCatalogPickers(){
 // 到底该在哪边配置。现在统一为：去「模型服务」添加平台，回到这里选择。
 function decorateModelPickers(){for(const kind of modelKinds){
   const panel=$('#profile-'+kind);
-  panel.querySelector('.profile-heading').after(modelPicker(kind,modelSettings[kind],async()=>{await refreshCatalogPickers();switchModelTab(kind);}));
+  panel.querySelector('.profile-heading').after(modelPicker(kind,modelSettings[kind]));
   const picker=panel.querySelector('.catalog-picker');
   const manage=el('button','secondary','前往模型服务');manage.type='button';manage.onclick=()=>switchModelTab('catalog');
   picker.append(manage);

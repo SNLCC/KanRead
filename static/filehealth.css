@@ -1,0 +1,21 @@
+/* 附件容错样式：正常副本不显示任何东西；只有缺失/变化/未知时才出现标签。 */
+.filehealth-line{margin:8px 0 0}
+.filehealth-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;line-height:1.5;
+  padding:2px 10px;border-radius:999px;border:1px solid transparent;background:#eef1ec;color:#5b6b60}
+.filehealth-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.8}
+.filehealth-badge.missing{color:#a03325;background:#fbeae7;border-color:#efc8c0}
+.filehealth-badge.changed{color:#8a6112;background:#fdf3dc;border-color:#ecd7a4}
+.filehealth-badge.unknown{color:#5f6b74;background:#eef1f3;border-color:#d6dde2}
+.filehealth-badge.missing:hover{background:#f7dcd7}
+.filehealth-badge.changed:hover{background:#f9eac4}
+.filehealth-badge.unknown:hover{background:#e4e9ed}
+
+.filehealth-dialog{width:min(540px,92vw);padding:22px 24px;border:1px solid var(--line,#e4e8e1);
+  border-radius:14px;box-shadow:0 18px 50px #0002}
+.filehealth-dialog h3{margin:0 0 10px;font-size:18px}
+.filehealth-dialog .filehealth-detail{margin:0 0 10px;font-size:13px;color:#8a4a3a;
+  background:#fdf3ef;border:1px solid #f1d8cf;border-radius:8px;padding:9px 11px}
+.filehealth-dialog .filehealth-storage{margin:0 0 6px;font-size:12px;color:#55655b}
+.filehealth-dialog .filehealth-location{margin:0 0 6px;font-size:11px;color:#7a877e;overflow-wrap:anywhere}
+.filehealth-dialog .filehealth-feedback{margin:8px 0 0;font-size:12px;color:#3d6b51;min-height:1.2em}
+.filehealth-dialog .filehealth-actions{flex-wrap:wrap;justify-content:flex-end}

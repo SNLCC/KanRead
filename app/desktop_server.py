@@ -1,18 +1,18 @@
 """Console-free server entry used by the Windows application launcher."""
 import logging
 import sys
-from pathlib import Path
 
 import uvicorn
 
 if __name__ == '__main__':
+    from app.logging_setup import configure
     from app.single_instance import DEFAULT_PORT, stop_stale
     from app.version import API_VERSION
 
-    folder = Path(__file__).resolve().parent.parent / 'data'
-    folder.mkdir(exist_ok=True)
-    logging.basicConfig(filename=folder / 'application.log', level=logging.WARNING,
-                        format='%(asctime)s %(levelname)s %(message)s')
+    # 轮转日志（2MB × 5）而不是无限追加：以前 data/application.log 只增不减，
+    # 长期使用会占掉用户磁盘，还会让诊断时翻日志变得极其困难。
+    # 数据目录仍沿用原来的位置（可用 READER_DATA_DIR 改），见 app/logging_setup.py。
+    configure()
     logger = logging.getLogger('reader.startup')
     # 旧版本的后台进程不会因为"重新打开程序"而消失：启动器只会在没人应答时才拉起新进程。
     # 这里主动检查并结束它，避免出现"界面是新的、接口是旧的"这种最难自查的状态。

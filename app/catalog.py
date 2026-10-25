@@ -170,7 +170,7 @@ def refresh(cid):
     from .model_metadata import official
     rows=None;failure=None
     try:
-        with httpx.Client(timeout=30,trust_env=model_services.use_proxy(profile)) as client:
+        with httpx.Client(timeout=30,**model_services.client_options(profile['base_url'])) as client:
             r=client.get(profile['base_url']+'/models',headers=model_services.headers(profile));r.raise_for_status();rows=r.json()['data']
         if not isinstance(rows,list) or len(rows)>10000:raise ValueError()
     except Exception as exc:
@@ -189,7 +189,7 @@ def refresh(cid):
     models={row['id']:{**classify(row),**official(profile['base_url'],row['id']),**(previous.get(row['id']) or {})} for row in rows if isinstance(row,dict) and isinstance(row.get('id'),str) and 0<len(row['id'])<=300}
     if data['provider']=='ollama':
         root=profile['base_url'].removesuffix('/v1')
-        with httpx.Client(timeout=30,trust_env=model_services.use_proxy(profile)) as client:
+        with httpx.Client(timeout=30,**model_services.client_options(profile['base_url'])) as client:
             for name,item in models.items():
                 try:
                     r=client.post(root+'/api/show',headers=model_services.headers(profile),json={'model':name});r.raise_for_status();detail=r.json()
@@ -200,7 +200,7 @@ def refresh(cid):
                 except Exception:pass
     if data['provider']=='ollama':
         try:
-            with httpx.Client(timeout=15,trust_env=model_services.use_proxy(profile)) as client:
+            with httpx.Client(timeout=15,**model_services.client_options(profile['base_url'])) as client:
                 r=client.get(profile['base_url'].removesuffix('/v1')+'/api/ps',headers=model_services.headers(profile));r.raise_for_status()
                 for row in r.json().get('models',[]):
                     name=row.get('name');capacity=row.get('context_length')

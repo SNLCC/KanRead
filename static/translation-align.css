@@ -1,0 +1,64 @@
+/* 原文 ↔ 译文双向定位与滚动同步（段级）的样式。
+   两层框都画在 #paper 上、不接收指针：阅读、选文与批注的既有交互不受影响。 */
+
+/* 译文栏状态栏里的「同步滚动」开关（默认不勾）。 */
+.translation-sync{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:11px;
+  color:#5f6f63;
+  cursor:pointer;
+  white-space:nowrap;
+  margin-left:auto;
+}
+.translation-sync input{width:14px;height:14px;margin:0;accent-color:var(--accent);flex:0 0 14px}
+.translation-sync:hover{color:var(--accent)}
+.translation-sync:has(input:checked){color:var(--accent);font-weight:600}
+
+/* 原文页上的定位框：比既有 .translation-source-layer（z-index 4 的填充块）高一层，
+   描边不会被填充盖住；指针穿透，不挡选文/批注/框选。 */
+.translation-align-layer{position:absolute;inset:0;z-index:5;pointer-events:none;overflow:visible}
+.translation-align-layer[hidden]{display:none!important}
+.translation-align-box{position:absolute;border-radius:2px;pointer-events:none}
+
+/* 悬停预览：细虚线描边，不与既有悬停高亮（填充块）抢视觉。 */
+.translation-align-layer.hover .translation-align-box{
+  border:1px dashed #3f8563;
+  background:rgba(169,208,167,.14);
+}
+
+/* 点击定位：更实的描边 + 浅填充，持续时间较长（12 秒后自动收起）。 */
+.translation-align-layer.pin .translation-align-box{
+  border:2px solid #2f7d5a;
+  background:rgba(143,198,165,.22);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.65);
+}
+
+/* 反向定位（点原文 → 译文段）：译文段短暂高亮，约 1.6 秒后淡出。 */
+.translation-align-flash{
+  border-radius:5px;
+  outline:2px solid #6f9f7d;
+  outline-offset:2px;
+  animation:translation-align-flash 1.6s ease-out 1;
+}
+@keyframes translation-align-flash{
+  0%{background:#cfe8d8}
+  70%{background:rgba(207,232,216,.35)}
+  100%{background:transparent}
+}
+
+/* 读屏公告：视觉隐藏，但"已定位到原文第 N 页 / 只定位到页"会被念出来。 */
+.translation-align-live{
+  position:absolute;
+  width:1px;height:1px;
+  margin:-1px;padding:0;
+  overflow:hidden;
+  clip-path:inset(50%);
+  white-space:nowrap;
+  border:0;
+}
+
+@media(max-width:850px){
+  .translation-sync{margin-left:0}
+}

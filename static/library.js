@@ -36,6 +36,9 @@ async function drawWorkbench(){
  if(!trash){card.onclick=e=>{if(!e.target.closest('button,a,input'))openDoc(d);};card.onkeydown=e=>{if(e.target===card&&['Enter',' '].includes(e.key)){e.preventDefault();openDoc(d);}};}
  card.append(el('p','document-tags',[(d.author?'@'+d.author:''),...(d.tags||[]).map(t=>'#'+t)].filter(Boolean).join('  ')));
  card.append(el('h2','',d.name),el('p','hint',`${d.pages} 页 · 读至第 ${d.current_page} 页`),el('p','storage-label',storageDescription(d)));
+ // 附件健康状态只在异常时出现（正常副本不占位置）；标签与处理对话框由 filehealth.js 提供。
+ // 用 typeof 判断而不是假定它一定先加载：功能被移除时文献列表仍要能正常显示。
+ if(typeof fileHealthBadge==='function'){const badge=fileHealthBadge(d);if(badge){const line=el('p','filehealth-line');line.append(badge);card.append(line);}}
  const progress=el('progress');progress.max=d.pages;progress.value=d.current_page;progress.setAttribute('aria-label','阅读进度');card.append(progress);
  const actions=el('div','document-actions');const action=(label,fn)=>{const b=el('button','secondary',label);b.onclick=async e=>{e.stopPropagation();b.disabled=true;try{await fn();}catch(err){toast(err.message);}finally{b.disabled=false;}};actions.append(b);return b;};
  if(trash){action('恢复到文献库',async()=>{await post(`/documents/${d.id}/restore`,{});await loadLibrary();await drawWorkbench();});action('彻底删除应用数据',()=>requestPurge(d));}

@@ -39,7 +39,7 @@ def translate(profile, language, root=ROOT):
             'max_tokens': max(MIN_OUTPUT, min(MAX_OUTPUT, int(profile.get('output_reserve') or 4096)))}
     body.update(model_services.task_options(profile, task=True))
     try:
-        with httpx.Client(timeout=90, trust_env=model_services.use_proxy(profile)) as client:
+        with httpx.Client(timeout=90, **model_services.client_options(base)) as client:
             response = client.post(base + (root or ROOT), headers=model_services.headers(profile), json=body)
             response.raise_for_status()
             payload = response.json()

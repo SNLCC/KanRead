@@ -15,7 +15,7 @@ def enabled():
 
 def embed(texts):
     profile=settings.runtime('embedding')
-    with httpx.Client(timeout=120,trust_env=model_services.use_proxy(profile)) as client:
+    with httpx.Client(timeout=120,**model_services.client_options(profile['base_url'])) as client:
         r=client.post(profile['base_url']+'/embeddings',
                       headers={'Authorization':'Bearer '+(profile['api_key'] or 'local')},
                       json={'model':profile['model'],'input':texts})

@@ -1,0 +1,16 @@
+/* 从 Zotero 导入批注：预览与结果对话框。
+   只复用既有变量与按钮样式，不引入新配色。 */
+
+.zotero-migrate{max-width:680px;max-height:86vh;overflow:auto}
+.zotero-migrate h2{margin:0 0 10px;font-size:18px;color:var(--ink)}
+.zotero-migrate-summary{background:#fbfcf7;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.zotero-migrate-line{margin:0 0 4px;font-size:12px;color:var(--ink)}
+.zotero-migrate-line:last-of-type{margin-bottom:0}
+.zotero-migrate-summary .hint{margin:8px 0 0}
+.zotero-migrate-warning{margin:10px 0 0;padding:8px 10px;border-radius:10px;background:#fff7e6;border:1px solid #ecdcb4;color:#7a5a17;font-size:11px}
+.zotero-migrate-items{margin:12px 0 0;display:grid;gap:8px;max-height:44vh;overflow:auto}
+.zotero-migrate-item{border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:12px}
+.zotero-migrate-item strong{margin-right:8px;color:var(--ink)}
+.zotero-migrate-item blockquote{margin:6px 0 4px;padding-left:8px;border-left:3px solid var(--line);color:#4a5a50}
+.zotero-migrate-item p{margin:4px 0 0;color:var(--ink)}
+.zotero-migrate-item p.hint{color:var(--muted)}

@@ -317,6 +317,9 @@ function applyPageVars(page){
 function segmentNode(row){
   const item=el('article','translation-segment state-'+row.state+(row.edited?' edited':''));
   item.dataset.index=String(row.index);
+  // 段落 → 原文页：translation-align.js 的段级双向定位用（本栏按页渲染，这里记下所属页，
+  // 换页竞态时以它为准，不按当前 state.page 猜）。
+  item.dataset.page=String(current.page||0);
   if(row.id)item.dataset.segmentId=row.id;
   const paragraph=el('p','translation-text',row.text||'（还没有译文）');
   const source=el('details','translation-source-text');
@@ -494,6 +497,7 @@ function furnitureBlock(label,className,rows){
   for(const row of rows){
     const item=el('div','page-furniture-item');
     item.dataset.index=String(row.index);
+    item.dataset.page=String(current.page||0);
     const text=el('p','page-furniture-text',row.text||row.source);
     item.append(text);
     const notes=annotationsForRow(row);

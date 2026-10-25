@@ -1,0 +1,24 @@
+/* 「数据与更新」维护面板：事实表格、操作按钮、诊断包列表与一键更新命令。 */
+.maintenance-panel h4{margin:22px 0 8px;font-size:14px}
+.maintenance-panel p{margin:0 0 8px}
+.maintenance-facts{margin:16px 0 12px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.maintenance-fact{display:flex;gap:14px;padding:10px 14px;border-bottom:1px solid var(--line);font-size:12px;align-items:baseline;flex-wrap:wrap}
+.maintenance-fact:last-child{border-bottom:0}
+.maintenance-fact-label{flex:0 0 96px;color:#6e806c;font-weight:600}
+.maintenance-fact-value{flex:1;min-width:0;overflow-wrap:anywhere}
+.maintenance-path{font-family:Consolas,'Cascadia Mono',monospace;font-size:11px;background:#f2f5ed;padding:2px 6px;border-radius:4px;overflow-wrap:anywhere}
+.maintenance-inline{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.maintenance-actions{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.maintenance-actions button{font-size:12px;padding:9px 14px}
+.maintenance-status{margin:6px 0 12px;font-size:11px;color:#6e806c;min-height:1.4em;overflow-wrap:anywhere}
+.maintenance-status.error{color:#b4553f}
+.maintenance-list{margin:10px 0 4px}
+.maintenance-package-list{margin:6px 0;padding-left:18px;font-size:11px;color:#5f6d58}
+.maintenance-package-list li{margin-bottom:4px;overflow-wrap:anywhere}
+.maintenance-update{margin-top:20px;padding-top:14px;border-top:1px solid var(--line)}
+.maintenance-command-row{display:flex;gap:8px;align-items:flex-start;margin:10px 0;flex-wrap:wrap}
+.maintenance-command{flex:1;min-width:240px;font-family:Consolas,'Cascadia Mono',monospace;font-size:11px;line-height:1.6;background:#f2f5ed;border:1px solid var(--line);border-radius:6px;padding:9px 11px;overflow-wrap:anywhere;white-space:pre-wrap;cursor:text}
+.maintenance-command:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.link-button{border:0;background:none;padding:0;color:var(--accent);text-decoration:underline;cursor:pointer;font-size:11px}
+.link-button:hover{text-decoration:none}
+@media(max-width:700px){.maintenance-fact-label{flex-basis:100%}}

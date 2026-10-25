@@ -7,7 +7,7 @@ from typing import Literal
 import httpx
 from fastapi import HTTPException
 from pydantic import BaseModel, Field, SecretStr
-from . import settings
+from . import settings, network
 
 class ZoteroSettings(BaseModel):
     mode: Literal['local','cloud','webdav']='local'
@@ -95,7 +95,9 @@ def api_get(path,params=None):
         headers['Zotero-API-Key']=key
     limit=100*1024*1024 if path.endswith('/file') else 10*1024*1024
     try:
-        with httpx.Client(timeout=30,trust_env=not local,follow_redirects=False) as client:
+        # 本机模式的目标是 http://localhost:23119，client_options 会按 loopback 自动直连；
+        # 云端模式走用户配置的三态代理（跟随系统 / 手动 / 直连）。
+        with httpx.Client(timeout=30,follow_redirects=False,**network.client_options(base)) as client:
             with client.stream('GET',base+path,params=params,headers=headers) as response:
                 status=response.status_code
                 content=bytearray()
@@ -126,8 +128,9 @@ def key_info():
     if not key: raise HTTPException(400,'还没有保存 Zotero API Key：云端与 WebDAV 附件模式都需要它。')
     headers={'Zotero-API-Version':'3','Zotero-API-Key':key}
     try:
-        with httpx.Client(timeout=20,trust_env=True,follow_redirects=False) as client:
-            r=client.get('https://api.zotero.org/keys/current',headers=headers)
+        url='https://api.zotero.org/keys/current'
+        with httpx.Client(timeout=20,follow_redirects=False,**network.client_options(url)) as client:
+            r=client.get(url,headers=headers)
     except httpx.HTTPError:
         raise HTTPException(502,_network_failure({**cfg,'mode':'cloud'})) from None
     if r.status_code>=400:
@@ -220,9 +223,55 @@ def listing(query='',start=0,collection=''):
     return {'items':result,'next':start+25 if len(rows)==25 else None,'mode':config()['mode']}
 
 
+def annotation_children(item_key):
+    """某个 PDF 附件下的 Zotero 批注/高亮子项（**只读**）。
+
+    为什么先查 children：批注在 Zotero 数据模型里是附件的子条目，正常同步的库一条请求
+    就能拿全。某些版本/配置下 children 只返回笔记，所以再加一条"全库按 itemType 过滤"
+    的兜底查询；兜底有上限，并在结果里如实说明是否可能不完整（truncated）。
+    只取 itemType=annotation 且未删除的条目；不读 Zotero 数据库、不写任何东西。
+    """
+    if not re.fullmatch('[A-Z0-9]{8}',item_key): raise HTTPException(400,'Zotero 条目标识无效')
+    rows=[];start=0
+    while True:
+        page=api_get(prefix()+'/items/'+item_key+'/children',
+                     {'format':'json','limit':100,'start':start}).json()
+        if not isinstance(page,list): raise HTTPException(502,'Zotero 返回的批注列表不符合预期。')
+        rows.extend(page)
+        if len(page)<100: break
+        start+=100
+        if start>=500: break
+    annotations=[row for row in rows
+                 if (row.get('data') or {}).get('itemType')=='annotation'
+                 and not (row.get('data') or {}).get('deleted')]
+    truncated=False
+    if not annotations:
+        # 兜底：全库扫 annotation 类型，再按 parentItem 过滤。上限 2000 条，
+        # 超过就停下并标记 truncated——宁可少导，也不让用户在不知情时等几分钟。
+        start=0;scanned=0
+        while True:
+            page=api_get(prefix()+'/items',
+                         {'format':'json','limit':100,'start':start,'itemType':'annotation'}).json()
+            if not isinstance(page,list): break
+            scanned+=len(page)
+            for row in page:
+                data=row.get('data') or {}
+                if data.get('parentItem')==item_key and not data.get('deleted'):
+                    annotations.append(row)
+            if len(page)<100: break
+            start+=100
+            if scanned>=2000: truncated=True;break
+    result=[]
+    for row in annotations:
+        data=row.get('data') or {}
+        result.append({'key':row.get('key'),'data':data})
+    return {'annotations':result,'truncated':truncated}
+
 def bounded_download(url,auth=None):
     if urlsplit(url).scheme!='https': raise HTTPException(400,'附件下载地址必须为 HTTPS')
-    with httpx.Client(timeout=90,follow_redirects=False) as client:
+    # 签名存储 URL 与 WebDAV 都是远端 HTTPS 目标：按三态代理走。
+    # WebDAV 若部署在局域网 https://192.168.x.x，client_options 会按私有网段自动直连。
+    with httpx.Client(timeout=90,follow_redirects=False,**network.client_options(url)) as client:
         with client.stream('GET',url,auth=auth) as r:
             r.raise_for_status();out=io.BytesIO()
             for block in r.iter_bytes():

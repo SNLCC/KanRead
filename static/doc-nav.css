@@ -1,0 +1,26 @@
+/* 文档导航层（试点）对话框：阅读工具栏入口 + 状态/开关/节点预览。
+   只描述这一功能自己的区块；对话框底色、按钮与动作行沿用 style.css 的既有类。 */
+
+.doc-nav-dialog{width:min(620px,92vw);max-height:82vh;overflow:auto;padding:18px 20px;
+  border:1px solid var(--line,#e4e8e1);border-radius:12px;background:var(--paper,#fff);color:var(--ink,#293d36)}
+.doc-nav-dialog::backdrop{background:rgba(0,0,0,.35)}
+.doc-nav-dialog h2{margin:0 0 8px;font-size:17px}
+.doc-nav-hint{margin:0;font-size:11px;color:#7c8972;line-height:1.7}
+.doc-nav-status{margin:12px 0 6px;padding:8px 10px;border-radius:7px;background:#f1f5ec;
+  font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+.doc-nav-toggle{display:flex;align-items:center;gap:7px;margin:10px 0;font-size:12px;cursor:pointer}
+.doc-nav-toggle input{width:16px;height:16px;margin:0;accent-color:var(--accent,#28654e)}
+.doc-nav-note{margin:4px 0 0;font-size:10px;color:#7c8972;line-height:1.6}
+.doc-nav-nodes{margin:10px 0 0;max-height:34vh;overflow:auto;border:1px solid var(--line,#e4e8e1);
+  border-radius:8px;padding:6px 8px;background:#fbfcf8}
+.doc-nav-list-head{margin:4px 0 6px;font-size:10px;color:#859088}
+.doc-nav-node{display:flex;align-items:baseline;gap:8px;padding:5px 2px;border-bottom:1px dashed #e6eae2;font-size:12px}
+.doc-nav-node:last-child{border-bottom:0}
+.doc-nav-node-page{flex:0 0 auto;color:var(--accent,#28654e);font-size:11px;min-width:52px}
+.doc-nav-node-label{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.doc-nav-node-kind{flex:0 0 auto;font-size:10px;color:#8b9880;border:1px solid #e2e7dd;border-radius:6px;padding:1px 5px}
+.doc-nav-empty{margin:6px 0;font-size:11px;color:#859088}
+.doc-nav-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px;flex-wrap:wrap}
+.doc-nav-actions button{padding:7px 12px;border:1px solid var(--line,#e4e8e1);border-radius:7px}
+.doc-nav-actions .primary{background:#dfe8dc;color:var(--accent,#28654e);border-color:#c9d8c4}
+.doc-nav-actions .danger{color:#a8462f;border-color:#e2c3ba;background:#fdf6f4}
