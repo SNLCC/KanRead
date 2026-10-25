@@ -7,4 +7,4 @@
 
 三处一致由 `tests/test_ui_contracts.py` 断言，避免"改了后端但界面/启动器还在等旧行为"。
 """
-API_VERSION = 47
+API_VERSION = 48

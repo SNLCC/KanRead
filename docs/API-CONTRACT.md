@@ -5,7 +5,7 @@
 > 所有 `/api/*` 都需要本机访问令牌（请求头 `X-KanRead-Token`，或心跳/关闭两类接口的 `?token=`）；
 > 唯一豁免是 `/api/health`（启动器与单实例检查用，不返回用户数据）。
 
-接口版本：47
+接口版本：48
 
 ## 接口清单（按路径排序）
 
@@ -84,9 +84,6 @@
 - `POST /api/maintenance/open-data-dir`
 - `GET /api/maintenance/status`
 - `PUT /api/model-assignments/{kind}`
-- `POST /api/network/probe`
-- `GET /api/network/settings`
-- `PUT /api/network/settings`
 - `GET /api/parsing-settings`
 - `PUT /api/parsing-settings`
 - `POST /api/parsing-settings/check`

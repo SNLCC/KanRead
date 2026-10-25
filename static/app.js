@@ -481,7 +481,7 @@ openDoc=async function(d){$('#library-home').classList.add('active');document.qu
 // 磁盘上的代码已经更新，但正在运行的后台进程还是旧的——本项目改的是后端，只刷新页面不够。
 // 更麻烦的是：旧后台进程不会因为"重新双击图标"而消失（启动器只在没人应答时才拉起新进程），
 // 所以这里把可行的做法一并写清楚。
-const REQUIRED_API_VERSION = 47;
+const REQUIRED_API_VERSION = 48;
 function staleBackendBanner(){
  let node=$('#stale-backend');
  if(!node){node=el('div');node.id='stale-backend';node.setAttribute('role','alert');document.body.append(node);}

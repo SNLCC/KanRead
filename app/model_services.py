@@ -15,25 +15,18 @@ def headers(profile):
 def use_proxy(profile):
     """兼容层（**仓库内已无调用点**）：旧调用点只问"要不要读环境变量代理"（bool）。
 
-    代理三态、系统代理与绕过规则都在 :mod:`app.network` 里，调用点统一写
-    ``**model_services.client_options(base_url)``；联网搜索也已接入三态。
-    保留本函数是因为既有测试与外部/历史调用仍按这个 bool 契约使用，删除会破坏它们。
+    现在所有请求一律直连（见 :mod:`app.network`），调用点统一写
+    ``**model_services.client_options(base_url)``。保留本函数只为兼容既有测试与
+    历史调用方的 bool 契约。
     """
-    host=urlsplit(profile['base_url']).hostname or ''
-    if host=='localhost' or host.endswith('.local'):
-        return False
-    try:
-        ip=ipaddress.ip_address(host)
-        return not (ip.is_private or ip.is_loopback)
-    except ValueError:
-        return True
+    return False
 
 
 def client_options(target_url):
     """把「这一跳实际怎么走」展开成 ``httpx.Client`` 的 kwargs。
 
-    所有模型/解析/翻译/语音调用点都用同一行 ``**model_services.client_options(base_url)``，
-    这样三态代理（跟随系统 / 手动 / 直连）、本机直连与绕过列表只在 app/network.py 实现一次。
+    所有模型/解析/翻译/语音调用点都用同一行 ``**model_services.client_options(base_url)``；
+    现在一律直连（``trust_env=False``），不读系统代理或环境变量代理。
     这里做一层转发而不是直接 import，是为了保持与既有调用点（model_services.xxx）一致的写法。
     """
     from . import network

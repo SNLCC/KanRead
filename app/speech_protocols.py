@@ -67,7 +67,7 @@ def _failure(exc, what):
     if isinstance(exc, httpx.TimeoutException):
         return HTTPException(504, what + '超时。云端语音通常几秒内返回；本地服务首次加载模型可能较慢，请重试。')
     if isinstance(exc, httpx.ConnectError):
-        return HTTPException(502, what + '连不上服务。请检查「模型服务」里的服务根地址、网络或代理设置。')
+        return HTTPException(502, what + '连不上服务。请检查「模型服务」里的服务根地址与网络连接。')
     if isinstance(exc, httpx.HTTPStatusError):
         status = exc.response.status_code
         return HTTPException(502, {

@@ -95,8 +95,7 @@ def api_get(path,params=None):
         headers['Zotero-API-Key']=key
     limit=100*1024*1024 if path.endswith('/file') else 10*1024*1024
     try:
-        # 本机模式的目标是 http://localhost:23119，client_options 会按 loopback 自动直连；
-        # 云端模式走用户配置的三态代理（跟随系统 / 手动 / 直连）。
+        # 本机模式的目标是 http://localhost:23119；云端模式同样一律直连。
         with httpx.Client(timeout=30,follow_redirects=False,**network.client_options(base)) as client:
             with client.stream('GET',base+path,params=params,headers=headers) as response:
                 status=response.status_code
@@ -269,8 +268,8 @@ def annotation_children(item_key):
 
 def bounded_download(url,auth=None):
     if urlsplit(url).scheme!='https': raise HTTPException(400,'附件下载地址必须为 HTTPS')
-    # 签名存储 URL 与 WebDAV 都是远端 HTTPS 目标：按三态代理走。
-    # WebDAV 若部署在局域网 https://192.168.x.x，client_options 会按私有网段自动直连。
+    # 签名存储 URL 与 WebDAV 都是远端 HTTPS 目标：与其他请求一样直连。
+    # WebDAV 若部署在局域网（如 https://192.168.x.x），也是直接连过去。
     with httpx.Client(timeout=90,follow_redirects=False,**network.client_options(url)) as client:
         with client.stream('GET',url,auth=auth) as r:
             r.raise_for_status();out=io.BytesIO()

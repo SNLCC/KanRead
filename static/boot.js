@@ -24,7 +24,6 @@
   {id:'zotero-migrate',file:'zotero-migrate.js',requires:['reading']},
   {id:'annotated-export',file:'annotated-export.js',requires:['reading']},
   {id:'doc-nav',file:'doc-nav.js',requires:['reading']},
-  {id:'network',file:'network.js',requires:['settings']},
   {id:'budget-confirm',file:'budget-confirm.js',requires:['core']},
   {id:'translation-align',file:'translation-align.js',requires:['translation']}
  ];

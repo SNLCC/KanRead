@@ -15,7 +15,7 @@ using System.Windows.Forms;
 class KanReadLauncher {
     const string Url = "http://127.0.0.1:8765/";
     // 与 app/version.py 的 API_VERSION 保持一致（tests/test_ui_contracts.py 会断言）。
-    const int ExpectedApiVersion = 47;
+    const int ExpectedApiVersion = 48;
     // /api/health 里的应用标识。**改名时要把旧标识追加到这里**：用户的端口上可能正跑着
     // 上一代的后台，认不出来就会被当成别人的程序，于是新后台不启动、旧后台也换不掉
     // （"重开了却没生效"）。与 app/single_instance.py 的 LEGACY_MARKERS 是同一份清单，
