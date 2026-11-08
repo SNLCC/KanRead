@@ -1,4 +1,5 @@
 # <img src="static/icon.png" width="44" align="top" alt="勘读图标"> 勘读 · KanRead
+# 重构版已发布在新仓库：[studianda](https://github.com/SNLCC/studianda)
 
 **面向人文社科研究的一站式文献工作台。** 读文献、翻译、批注、笔记、检索都在同一个窗口里完成，数据默认留在本机；**只有你主动启用的外部服务（模型、解析、翻译、联网搜索等）会收到相应内容**（见下文「数据外发说明」）。
 
